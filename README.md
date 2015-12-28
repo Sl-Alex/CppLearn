@@ -6,3 +6,16 @@ Two tasks
 
 1. Arithmetic operations ( + - * / % )
 2. Calculation of the sum of all digits in the number
+
+## Lecture 2 (loops)
+
+###calc_loop
+User can input as many numbers as he wants. Zero means the end of the input.
+SW calculates sum, maximum number, minimum number, amount of the positive numbers, amount of the even numbers
+User can choose, which loop style (while, do_while, for) to use. 
+
+###calculator
+Very simple calculator.
+
+###power
+Calculates the power of the number in the most efficient way;
