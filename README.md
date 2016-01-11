@@ -19,3 +19,10 @@ Very simple calculator.
 
 ###power
 Calculates the power of the number in the most efficient way;
+
+## Lecture 3 (arrays)
+###array_simple
+Simple array operations (swap, bubble sorting)
+
+###quicksort
+Quicksort algorythm implementation
