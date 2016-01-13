@@ -26,3 +26,7 @@ Simple array operations (swap, bubble sorting)
 
 ###quicksort
 Quicksort algorythm implementation
+
+## Lecture 4 (C strings)
+###c_strings
+Various tasks (some of which use new/delete)
