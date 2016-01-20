@@ -30,3 +30,10 @@ Quicksort algorythm implementation
 ## Lecture 4 (C strings)
 ###c_strings
 Various tasks (some of which use new/delete)
+
+## Lecture 5 (memory and rand)
+###dyn_array
+Dynamic array memory reallocation
+
+###dices
+Small "dices" pseudogame (CPU vs CPU)
