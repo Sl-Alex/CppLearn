@@ -1,20 +1,15 @@
 #include <iostream>
+#include <limits>
+#include "tasks.h"
 
 using namespace std;
-
-void task1(void);
-void task2(void);
-void task3(void);
-void task4(void);
-void task5(void);
-void task6(void);
 
 int main()
 {
     int task;
     cout << "Enter task number (1..6)" << endl;
     cin >> task;
-    cin.sync();
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     switch(task)
     {
         case 1:

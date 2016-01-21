@@ -33,12 +33,15 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="str_utils.cpp" />
+		<Unit filename="str_utils.h" />
 		<Unit filename="task1.cpp" />
 		<Unit filename="task2.cpp" />
 		<Unit filename="task3.cpp" />
 		<Unit filename="task4.cpp" />
 		<Unit filename="task5.cpp" />
 		<Unit filename="task6.cpp" />
+		<Unit filename="tasks.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

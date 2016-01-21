@@ -1,8 +1,7 @@
 #include <iostream>
+#include "str_utils.h"
 
 using namespace std;
-
-int char_count(const char *);
 
 void task5(void)
 {
@@ -17,7 +16,7 @@ void task5(void)
     cin.getline(line2, 100);
 
     // The length of the result with the null-termination
-    int sz = char_count(line1) + char_count(line1) + 1;
+    int sz = str_utils_get_len(line1) + str_utils_get_len(line1) + 1;
 
     char * line3 = new char[sz];
 

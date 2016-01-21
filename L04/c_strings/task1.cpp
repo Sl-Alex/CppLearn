@@ -1,18 +1,7 @@
 #include <iostream>
+#include "str_utils.h"
 
 using namespace std;
-
-int char_count(const char * line)
-{
-    int cnt = 0;
-    const char * start = line;
-
-    // Loop until the first null
-    while (*(line++) != '\0');
-
-    // Return pointer difference;
-    return line - start - 1;
-}
 
 void task1(void)
 {
@@ -24,5 +13,5 @@ void task1(void)
     cout << "Line \"" << line << "\" was entered" << endl;
 
     // Output the number of the symbols in the string;
-    cout << "Length is " << char_count(line) << " symbols" << endl;
+    cout << "Length is " << str_utils_get_len(line) << " symbols" << endl;
 }
