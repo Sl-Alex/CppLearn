@@ -37,3 +37,14 @@ Dynamic array memory reallocation
 
 ###dices
 Small "dices" pseudogame (CPU vs CPU)
+
+## Lecture 6 (callbacks)
+###calc_loop_printf
+Task from lecture 2, but using printf
+
+###custom_printf
+Custom printf implementaton
+
+###
+std_qsort
+How to use std::qsort()
