@@ -45,6 +45,12 @@ Task from lecture 2, but using printf
 ###custom_printf
 Custom printf implementaton
 
-###
-std_qsort
+###std_qsort
 How to use std::qsort()
+
+## Lecture 7 (main arguments and structs)
+###cmd_line_calc
+Simple command-line calc
+
+###fractions
+Fraction arithmetic
