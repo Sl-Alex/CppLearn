@@ -38,7 +38,9 @@ int main()
 
     cout << endl;
     cout << "Formula #1: res = f1 * f2 - (f1 - f2) / f1" << endl;
-    cout << "Result #1 = " << res.num << "/" << res.denom << endl;
+    cout << "Result #1 = ";
+    FracPrint(&res);
+    cout << endl;
     cout << endl;
 
     //    _____res________
@@ -59,6 +61,21 @@ int main()
     FracSubstract(&res,&tmp1,&tmp4);
 
     cout << "Formula #2: res = f1 * f2 - (2*f1 - f2) / f1" << endl;
-    cout << "Result #2 = " << res.num << "/" << res.denom << endl;
+    cout << "Result #2 = ";
+    FracPrint(&res);
+    cout << endl;
+    cout << endl;
+
+    cout << "The same using overloaded operators" << endl;
+
+    res = d1 * d2 - (d1 - d2) / d1;
+    cout << "New formula #1:" << endl;
+    cout << "Result #1 = " << res << endl;
+    cout << endl;
+
+    res = d1 * d2 - (2 * d1 - d2) / d1;
+    cout << "New formula #2:" << endl;
+    cout << "Result #2 = " << res << endl;
+
     return 0;
 }

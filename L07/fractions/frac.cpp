@@ -26,7 +26,10 @@ void FracDivide(Frac * res, const Frac * a, const Frac * b)
 {
     int b_sign = (b->num >= 0)? 1 : -1;
 
-    Frac tmp = {b->denom*b_sign, abs(b->num)};
+    Frac tmp;
+    tmp.num = b->denom*b_sign;
+    tmp.denom = abs(b->num);
+
     FracMultiply(res,a,&tmp);
 }
 
@@ -44,10 +47,50 @@ void FracAdd(Frac * res, const Frac * a, const Frac * b)
 
 void FracSubstract(Frac * res, const Frac * a, const Frac * b)
 {
-    Frac tmp = {-b->num, b->denom};
+    Frac tmp;
+    tmp.num = -b->num;
+    tmp.denom = b->denom;
     FracAdd(res,a,&tmp);
 }
 
+void FracPrint(const Frac * f)
+{
+    cout << f->num << "/" << f->denom;
+}
+
+Frac operator+(const Frac &a, const Frac &b)
+{
+    Frac c;
+    FracAdd(&c,&a,&b);
+    return c;
+}
+
+Frac operator-(const Frac &a, const Frac &b)
+{
+    Frac c;
+    FracSubstract(&c,&a,&b);
+    return c;
+}
+
+Frac operator*(const Frac &a, const Frac &b)
+{
+    Frac c;
+    FracMultiply(&c,&a,&b);
+    return c;
+}
+
+Frac operator/(const Frac &a, const Frac &b)
+{
+    Frac c;
+    FracDivide(&c,&a,&b);
+    return c;
+}
+
+ostream& operator<<(ostream& os, Frac& a)
+{
+    os << a.num << '/' << a.denom;
+    return os;
+}
 /**********************
  * Internal functions *
  **********************/
