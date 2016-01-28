@@ -1,56 +1,74 @@
 #include <iostream>
 #include <cstdlib>
+#include <cassert>
 #include "frac.h"
 
 using namespace std;
 
 static int gcd_euclidean(int a, int b);
 
-void FracSimplify(Frac * value)
+void FracPurify(Frac & value)
 {
-    int gcd = gcd_euclidean(abs(value->num),value->denom);
+    // Check for a negative denominator
+    if (value.denom < 0)
+    {
+        value.num   = - value.num;
+        value.denom = - value.denom;
+    }
+    // Check for a zero nominator
+    if (value.num == 0)
+    {
+        value.denom = 1;
+    }
+    // Check for a zero denominator
+    assert(value.denom != 0);
 
-    value->num /= gcd;
-    value->denom /= gcd;
+    // Simplify
+    int gcd = gcd_euclidean(abs(value.num),value.denom);
+    value.num /= gcd;
+    value.denom /= gcd;
 }
 
-void FracMultiply(Frac * res, const Frac * a, const Frac * b)
+Frac FracMultiply(Frac a, Frac b)
 {
-    res->num = a->num * b->num;
-    res->denom = a->denom * b->denom;
+    Frac res;
+    res.num = a.num * b.num;
+    res.denom = a.denom * b.denom;
 
-    FracSimplify(res);
+    FracPurify(res);
+    return res;
 }
 
-void FracDivide(Frac * res, const Frac * a, const Frac * b)
+Frac FracDivide(Frac a, Frac b)
 {
-    int b_sign = (b->num >= 0)? 1 : -1;
+    swap(b.num, b.denom);
 
+    return FracMultiply(a,b);
+}
+
+Frac FracAdd(Frac a, Frac b)
+{
+    Frac res;
+
+    FracPurify(a);
+    FracPurify(b);
+
+    int gcd = gcd_euclidean(a.denom, b.denom);
+    int mult_a = b.denom / gcd;
+    int mult_b = a.denom / gcd;
+
+    res.num = a.num * mult_a + b.num * mult_b;
+    res.denom = a.denom * mult_a;
+
+    FracPurify(res);
+    return res;
+}
+
+Frac FracSubstract(Frac a, Frac b)
+{
     Frac tmp;
-    tmp.num = b->denom*b_sign;
-    tmp.denom = abs(b->num);
-
-    FracMultiply(res,a,&tmp);
-}
-
-void FracAdd(Frac * res, const Frac * a, const Frac * b)
-{
-    int gcd = gcd_euclidean(a->denom,b->denom);
-    int mult_a = b->denom / gcd;
-    int mult_b = a->denom / gcd;
-
-    res->num = a->num * mult_a + b->num * mult_b;
-    res->denom = a->denom * mult_a;
-
-    FracSimplify(res);
-}
-
-void FracSubstract(Frac * res, const Frac * a, const Frac * b)
-{
-    Frac tmp;
-    tmp.num = -b->num;
-    tmp.denom = b->denom;
-    FracAdd(res,a,&tmp);
+    b.num = -b.num;
+    return FracAdd(a,b);
 }
 
 void FracPrint(const Frac * f)
@@ -60,30 +78,35 @@ void FracPrint(const Frac * f)
 
 Frac operator+(const Frac &a, const Frac &b)
 {
-    Frac c;
-    FracAdd(&c,&a,&b);
-    return c;
+    return FracAdd(a,b);
 }
 
 Frac operator-(const Frac &a, const Frac &b)
 {
-    Frac c;
-    FracSubstract(&c,&a,&b);
-    return c;
+    return FracSubstract(a,b);
 }
 
 Frac operator*(const Frac &a, const Frac &b)
 {
-    Frac c;
-    FracMultiply(&c,&a,&b);
-    return c;
+    return FracMultiply(a,b);
 }
 
 Frac operator/(const Frac &a, const Frac &b)
 {
-    Frac c;
-    FracDivide(&c,&a,&b);
-    return c;
+    return FracDivide(a,b);
+}
+
+bool operator==(const Frac &a, const Frac &b)
+{
+    Frac a1 = a;
+    Frac b1 = b;
+    FracPurify(a1);
+    FracPurify(b1);
+    if (a1.num != b1.num)
+        return false;
+    if (a1.denom != b1.denom)
+        return false;
+    return true;
 }
 
 ostream& operator<<(ostream& os, Frac& a)
@@ -97,28 +120,14 @@ ostream& operator<<(ostream& os, Frac& a)
 
 static int gcd_euclidean(int a, int b)
 {
-    int a1 = max(a, b);
-    int b1 = min(a, b);
-
-    if (b1 == 0) return 1;
-
-    if ((a1 % b1) == 0)
-        return b1;
-
-    while (a1 >= b1)
+    while ((a != 0) && (b != 0))
     {
-        a1 -= b1;
+        if (a >= b)
+            a -= b;
+        if (b >= a)
+            b -= a;
     }
 
-    if (a1 == 0)
-        return 0;
-
-    int res = gcd_euclidean(b1, a1);
-    if (res == 0)
-        return a1;
-    else
-        return res;
-
-    return 0;
+    return a + b;
 }
 

@@ -31,10 +31,10 @@ int main()
     //  tmp1       tmp2      |
     // |    |     |    |     |
     // d1 * d2 - (d1 - d2) / d1;
-    FracMultiply(&tmp1,&d1,&d2);
-    FracSubstract(&tmp2,&d1,&d2);
-    FracDivide(&tmp3,&tmp2,&d1);
-    FracSubstract(&res,&tmp1,&tmp3);
+    tmp1 = FracMultiply(d1,d2);
+    tmp2 = FracSubstract(d1,d2);
+    tmp3 = FracDivide(tmp2,d1);
+    res = FracSubstract(tmp1,tmp3);
 
     cout << endl;
     cout << "Formula #1: res = f1 * f2 - (f1 - f2) / f1" << endl;
@@ -52,13 +52,13 @@ int main()
     //  tmp1      tmp2   |     |
     // |    |     | |    |     |
     // d1 * d2 - (2*d1 - d2) / d1;
-    FracMultiply(&tmp1,&d1,&d2);
+    tmp1 = FracMultiply(d1,d2);
     tmp_mult.num = 2;
     tmp_mult.denom = 1;
-    FracMultiply(&tmp2, &tmp_mult, &d1);
-    FracSubstract(&tmp3,&tmp2,&d2);
-    FracDivide(&tmp4,&tmp3,&d1);
-    FracSubstract(&res,&tmp1,&tmp4);
+    tmp2 = FracMultiply(tmp_mult, d1);
+    tmp3 = FracSubstract(tmp2,d2);
+    tmp4 = FracDivide(tmp3,d1);
+    res = FracSubstract(tmp1,tmp4);
 
     cout << "Formula #2: res = f1 * f2 - (2*f1 - f2) / f1" << endl;
     cout << "Result #2 = ";
@@ -76,6 +76,12 @@ int main()
     res = d1 * d2 - (2 * d1 - d2) / d1;
     cout << "New formula #2:" << endl;
     cout << "Result #2 = " << res << endl;
+    cout << endl;
+
+    if (d1 == d2)
+        cout << "Fractions are equal";
+    else
+        cout << "Fractions are different";
 
     return 0;
 }
