@@ -33,6 +33,7 @@ Frac operator-(const Frac &a, const Frac &b);
 Frac operator*(const Frac &a, const Frac &b);
 Frac operator/(const Frac &a, const Frac &b);
 bool operator==(const Frac &a, const Frac &b);
+bool operator!=(const Frac &a, const Frac &b);
 ostream& operator<<(ostream& os, Frac& a);
 
 #endif // FRAC_H

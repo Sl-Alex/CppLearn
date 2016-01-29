@@ -109,6 +109,11 @@ bool operator==(const Frac &a, const Frac &b)
     return true;
 }
 
+bool operator!=(const Frac &a, const Frac &b)
+{
+    return (!(a==b));
+}
+
 ostream& operator<<(ostream& os, Frac& a)
 {
     os << a.num << '/' << a.denom;
