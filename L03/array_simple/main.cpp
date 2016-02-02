@@ -58,7 +58,7 @@ int main()
     // Bubble sort
     for (int i = 0; i < ARR_SIZE - 1; ++i)
     {
-        for (int j = 0; j < ARR_SIZE - i; ++j)
+        for (int j = 1; j < ARR_SIZE - i; ++j)
         {
             if (arr[j-1] > arr[j])
             {
