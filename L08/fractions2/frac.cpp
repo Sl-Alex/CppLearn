@@ -12,28 +12,6 @@ Frac::Frac(int n, int d)
 
 }
 
-void Frac::purify()
-{
-    // Check for a negative denominator
-    if (this->denom < 0)
-    {
-        this->num   = - this->num;
-        this->denom = - this->denom;
-    }
-    // Check for a zero nominator
-    if (this->num == 0)
-    {
-        this->denom = 1;
-    }
-    // Check for a zero denominator
-    assert(this->denom != 0);
-
-    // Simplify
-    int gcd = calc_gcd(abs(this->num),this->denom);
-    this->num /= gcd;
-    this->denom /= gcd;
-}
-
 Frac Frac::operator+(const Frac &a)
 {
     Frac arg1 = *this;
@@ -104,16 +82,55 @@ bool Frac::operator!=(const Frac &a)
     return !(*this == a);
 }
 
-/// @TODO
 bool Frac::operator>(const Frac &a)
 {
+    Frac arg1 = *this;
+    Frac arg2 = a;
+
+    arg1.purify();
+    arg2.purify();
+
+    int gcd = calc_gcd(arg1.denom, arg2.denom);
+    int mult1 = arg1.denom / gcd;
+    int mult2 = arg2.denom / gcd;
+
+    arg1.num = arg1.num * mult2;
+    arg2.num = arg2.num * mult1;
+
+    if (arg1.num > arg2.num)
+        return true;
+
     return false;
 }
 
-/// @TODO
 bool Frac::operator<(const Frac &a)
 {
+    if (*this == a)
+        return false;
+
+    if (*this > a)
+        return false;
+
+    return true;
+}
+
+bool Frac::operator>=(const Frac &a)
+{
+    if (*this == a)
+        return true;
+
+    if (*this > a)
+        return true;
+
     return false;
+}
+
+bool Frac::operator<=(const Frac &a)
+{
+    if (*this > a)
+        return false;
+
+    return true;
 }
 
 ostream& operator<<(ostream& os, const Frac& a)
@@ -122,9 +139,10 @@ ostream& operator<<(ostream& os, const Frac& a)
     return os;
 }
 /**********************
- * Internal functions *
+ * private functions *
  **********************/
 
+/// @brief Find the greatest common divider
 int Frac::calc_gcd(int a, int b)
 {
     while ((a != 0) && (b != 0))
@@ -138,3 +156,25 @@ int Frac::calc_gcd(int a, int b)
     return a + b;
 }
 
+/// @brief Purify the fraction
+void Frac::purify()
+{
+    // Check for a negative denominator
+    if (this->denom < 0)
+    {
+        this->num   = - this->num;
+        this->denom = - this->denom;
+    }
+    // Check for a zero nominator
+    if (this->num == 0)
+    {
+        this->denom = 1;
+    }
+    // Check for a zero denominator
+    assert(this->denom != 0);
+
+    // Simplify
+    int gcd = calc_gcd(abs(this->num),this->denom);
+    this->num /= gcd;
+    this->denom /= gcd;
+}

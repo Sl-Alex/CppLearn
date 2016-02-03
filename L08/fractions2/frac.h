@@ -22,6 +22,8 @@ struct Frac {
         bool operator!=(const Frac &a);
         bool operator>(const Frac &a);
         bool operator<(const Frac &a);
+        bool operator>=(const Frac &a);
+        bool operator<=(const Frac &a);
 
     private:
         void purify(void);
