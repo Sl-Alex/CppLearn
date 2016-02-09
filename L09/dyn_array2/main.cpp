@@ -1,4 +1,5 @@
 #include <iostream>
+#include "dynarr.h"
 
 using namespace std;
 
@@ -24,40 +25,34 @@ int * alloc_more(int * arr, int &arr_size, const unsigned int increment)
 
 int main()
 {
-    const int SIZE_INCREMENT = 5;
-    int arr_size = SIZE_INCREMENT;
-    int data_cnt = 0;
-    int * arr = new int [arr_size];
+    DynArr arr;
 
     cout << "Enter any numbers, one by one." << endl;
     cout << "They will be added to the array." << endl;
     cout << "Zero means the end of the input." << endl;
     cout << "Array size will be adjusted automatically" << endl;
 
-    cin >> arr[data_cnt];
-    while (arr[data_cnt])
+    int tmp;
+    cin >> tmp;
+
+    while (tmp)
     {
-        ++data_cnt;
-
-        if (data_cnt >= arr_size)
-        {
-            arr = alloc_more(arr, arr_size, SIZE_INCREMENT);
-            cout << "Array size was increased to " << arr_size << endl;
-        }
-
-        cin >> arr[data_cnt];
+        arr[arr.getSize()] = tmp;
+        cin >> tmp;
     }
 
     cout << "==================" << endl;
-    cout << "Reversed array:" << endl;
 
-    for (int i = data_cnt - 1; i >= 0; --i)
-    {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    cout << "Result of the input:" << endl;
+    cout << arr << endl;
 
-    delete[] arr;
+    cout << "Array after copy in the constructor:" << endl;
+    DynArr arr2 = arr;
+    cout << arr2 << endl;
+
+    cout << "Array after the assignment:" << endl;
+    DynArr arr3 = arr;
+    cout << arr3 << endl;
 
     return 0;
 }

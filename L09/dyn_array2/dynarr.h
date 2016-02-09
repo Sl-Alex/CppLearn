@@ -1,43 +1,38 @@
 #ifndef DYNARR_H
 #define DYNARR_H
 
+#include <iostream>
+using namespace std;
 
 class DynArr
 {
     public:
-        static const int DEFAULT_SIZE = 5;
+        static const unsigned int DEFAULT_SIZE = 5;
+        static const unsigned int SIZE_INCREMENT = 5;
 
-        /** Default constructor */
         DynArr();
-        /** Default destructor */
+        DynArr(const DynArr &from);
         ~DynArr();
-        /** Assignment operator
-         *  \param other Object to assign from
-         *  \return A reference to this
-         */
-        DynArr& operator=(const DynArr& other);
-        /** Access m_Size
-         * \return The current value of m_Size
-         */
-        unsigned int getSize() { return m_Size; }
-        /** Set m_Size
-         * \param val New value to set
-         */
+
+        DynArr& operator=(const DynArr& rhs);
+        int& operator[](unsigned int idx);
+        int operator[](unsigned int idx) const;
+
+        unsigned int getSize() const { return m_Size; }
         void setSize(unsigned int val);
-        /** Access m_Capacity
-         * \return The current value of m_Capacity
-         */
-        unsigned int getCapacity() { return m_Capacity; }
-        /** Set m_Capacity
-         * \param val New value to set
-         */
-        void setCapacity(unsigned int val) { m_Capacity = val; }
+
+        unsigned int getCapacity() const { return m_Capacity; }
+        void setCapacity(unsigned int val);
+
     protected:
     private:
         int * m_Arr;
-        void resizeArr(unsigned int NewSize);
+        void reallocArr(unsigned int NewCapacity);
         unsigned int m_Size; //!< Member variable "m_Size"
         unsigned int m_Capacity; //!< Member variable "m_Capacity"
 };
+
+
+ostream& operator<<(ostream& os, const DynArr & a);
 
 #endif // DYNARR_H
