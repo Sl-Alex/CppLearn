@@ -141,7 +141,7 @@ BigInt BigInt::operator+(const BigInt& rhs) const
     }
 
     // Update negative value
-    // res.mNegative = ((*this).mNegative ^ rhs.mNegative);
+    res.mNegative = ((*this).mNegative ^ rhs.mNegative);
     // Reduce
     res.mReduce();
 
@@ -276,7 +276,6 @@ int compareArrays(int * arr1, int * arr2, unsigned int sz1, unsigned int sz2)
 
 ostream& operator<<(ostream& os, const BigInt& val)
 {
-    //BigInt tmp(val);
     if (val.mNegative)
         cout << "-";
     for (unsigned int i = val.mDigCnt; i > 0; --i)
