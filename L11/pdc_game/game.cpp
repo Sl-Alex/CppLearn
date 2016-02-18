@@ -73,7 +73,7 @@ int getInt(int def)
     return ret;
 }
 
-inline int getRectSteps(int w, int h)
+int getRectSteps(int w, int h)
 {
     return 2*w + 2*h - 2;
 }

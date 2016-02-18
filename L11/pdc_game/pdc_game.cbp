@@ -38,7 +38,7 @@
 			<Add directory="D:/Apps/CodeBlocks/share/MyLibs/pdcurses/win32" />
 		</Linker>
 		<Unit filename="game.cpp">
-			<Option compilerVar="CC" />
+			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="game.h" />
 		<Unit filename="main.cpp" />
