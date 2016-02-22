@@ -196,30 +196,33 @@ void MainWindow::updateAnimation()
     {
         // Check if there is a successful combination
         bool win = false;
+        int scoreInc = 0;
         if ((mState[0] == mState[1]) && (mState[1] == mState[2]))
         {
-            mCoins += 10;
+            scoreInc = 10;
             win = true;
-
         }
         else if ((mState[0] == mState[1]) ||
                  (mState[1] == mState[2]) ||
                  (mState[2] == mState[0]))
         {
-            mCoins += 2;
+            scoreInc = 2;
             win = true;
         }
         for (int i = 0; i < 3; ++i)
         {
+
             if (mState[i] == 5)
             {
-                ++mCoins;
+                ++scoreInc;
                 win = true;
             }
         }
         if (win)
         {
-            moneyText->setNum(mCoins);
+            mCoins += scoreInc;
+            QString result = "+%1";
+            moneyText->setText(result.arg(scoreInc));
             mWinTimer->start(150);
             /// @ToDo: animate
         }
@@ -252,6 +255,7 @@ void MainWindow::winAnimation()
         cnt = 5;
         font.setPointSize(12);
         moneyText->setFont(font);
+        moneyText->setNum(mCoins);
         mWinTimer->stop();
         return;
     }
