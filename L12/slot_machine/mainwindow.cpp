@@ -60,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
         pix.load(imgPath.arg(mState[i]));
         pictures[i]->setPixmap(pix);
     }
-    setStyleSheet("color: #E0E0E0; background: #303030;");
 
     spinButton = new QPushButton(tr("Make a spin!"));
 
@@ -103,55 +102,6 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addLayout(picturesLayout,1);
     mainLayout->addWidget(spinButton,1);
 
-    spinButton->setStyleSheet(
-"QPushButton {\
-    border: 2px solid #404040;\
-    border-radius: 6px;\
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #808080, stop: 1 #606060);\
-    min-width: 80px;\
-}\
-QPushButton:pressed {\
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #606060, stop: 1 #909090);\
-}\
-QPushButton:!enabled{\
-    color:#606060;\
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\
-        stop: 0 #606060, stop: 1 #909090);\
-}\
-QPushButton:flat {\
-    border: none; /* no border for a flat push button */\
-}\
-QPushButton:default {\
-    border-color: navy; /* make the default button prominent */\
-}");
-    spinButton->setFixedHeight(40);
-
-    menuBar()->setStyleSheet(
-"QMenuBar{\
-    color: #D0D0D0;\
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,\
-        stop:0 #606060, stop:1 #303030);\
-}\
-QMenuBar::item {\
-    spacing: 5px; /* spacing between menu bar items */\
-    padding: 5px 5px;\
-    background: transparent;\
-    color: #E0E0E0;\
-}\
-QMenu::item:selected { /* when selected using mouse or keyboard */\
-    background: #585858;\
-}\
-QMenu::item:pressed {\
-    background: #888888;\
-}\
-QMenuBar::item:selected { /* when selected using mouse or keyboard */\
-    background: #585858;\
-}\
-QMenuBar::item:pressed {\
-    background: #888888;\
-}");
     connect(spinButton, SIGNAL(clicked()), this, SLOT(makeSpin()));
     mAnimationTimer = new QTimer(this);
     mWinTimer = new QTimer(this);
