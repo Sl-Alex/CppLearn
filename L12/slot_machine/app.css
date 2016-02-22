@@ -20,11 +20,21 @@ QMenuBar::item {
     background: transparent;
     color: #E0E0E0;
 }
-QMenu::item:selected { /* when selected using mouse or keyboard */
-    background: #585858;
+QMenu {
+/*    border: 1px solid black;*/
+    border: none;
+    color: #E0E0E0;
+    background-color: #585858;
 }
-QMenu::item:pressed {
-    background: #888888;
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #ABABAB; /* sets background of the menu */
 }
 QMenuBar::item:selected { /* when selected using mouse or keyboard */
     background: #585858;
@@ -33,13 +43,19 @@ QMenuBar::item:pressed {
     background: #888888;
 }
 QPushButton {
-    min-height: 35px;
+    min-height: 25px;
+	max-height: 40px;
     border: 2px solid #404040;
     border-radius: 6px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #808080, stop: 1 #606060);
     min-width: 80px;
 }
+QPushButton#spinButton {
+    min-height: 40px;
+	max-height: 40px;
+}
+
 QPushButton:pressed {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #606060, stop: 1 #909090);

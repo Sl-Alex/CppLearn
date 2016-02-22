@@ -102,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addLayout(picturesLayout,1);
     mainLayout->addWidget(spinButton,1);
 
+    spinButton->setObjectName("spinButton");
+
     connect(spinButton, SIGNAL(clicked()), this, SLOT(makeSpin()));
     mAnimationTimer = new QTimer(this);
     mWinTimer = new QTimer(this);
