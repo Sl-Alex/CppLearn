@@ -1,0 +1,84 @@
+QMainWindow{
+    color: #FFFFFF;
+    background: #303030;
+}
+QDialog{
+    color: #FFFFFF;
+    background: #303030;
+}
+QLabel{
+    color: #FFFFFF;
+}
+QLabel[isHeader="true"]{
+    font-size: 16pt;
+    font-weight: bold;
+    color: #FE9A2E;
+}
+QLabel[isStats="true"]{
+    font-size: 12pt;
+    font-weight: bold;
+    color: #40FF00;
+}
+QMenuBar{
+    color: #D0D0D0;
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+        stop:0 #606060, stop:1 #303030);
+}
+QMenuBar::item {
+    spacing: 5px; /* spacing between menu bar items */
+    padding: 5px 5px;
+    background: transparent;
+    color: #E0E0E0;
+}
+QMenu {
+    border: none;
+    color: #E0E0E0;
+    background-color: #585858;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #ABABAB; /* sets background of the menu */
+}
+QMenuBar::item:selected { /* when selected using mouse or keyboard */
+    background: #585858;
+}
+QMenuBar::item:pressed {
+    background: #888888;
+}
+QPushButton {
+    color: #E0E0E0;
+    min-height: 25px;
+	max-height: 40px;
+    border: 2px solid #404040;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #808080, stop: 1 #606060);
+    min-width: 80px;
+}
+QPushButton#spinButton {
+    min-height: 40px;
+	max-height: 40px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #606060, stop: 1 #909090);
+}
+QPushButton:!enabled{
+    color:#606060;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #606060, stop: 1 #909090);
+}
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+QPushButton:focus {
+    border: 2px solid #404040;
+    outline: none;
+}
