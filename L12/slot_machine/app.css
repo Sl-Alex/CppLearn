@@ -31,7 +31,6 @@ QMenuBar::item {
     color: #E0E0E0;
 }
 QMenu {
-/*    border: 1px solid black;*/
     border: none;
     color: #E0E0E0;
     background-color: #585858;
@@ -53,6 +52,7 @@ QMenuBar::item:pressed {
     background: #888888;
 }
 QPushButton {
+    color: #E0E0E0;
     min-height: 25px;
 	max-height: 40px;
     border: 2px solid #404040;
@@ -78,6 +78,7 @@ QPushButton:!enabled{
 QPushButton:flat {
     border: none; /* no border for a flat push button */
 }
-QPushButton:default {
-/*    border-color: navy;*/
+QPushButton:focus {
+    border: 2px solid #404040;
+    outline: none;
 }
