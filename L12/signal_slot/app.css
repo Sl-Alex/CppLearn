@@ -1,3 +1,10 @@
+QLineEdit {
+    min-height: 25px;
+    max-height: 40px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    selection-background-color: #FF8000;
+}
 QMainWindow{
     color: #FFFFFF;
     background: #303030;
