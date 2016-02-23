@@ -1,35 +1,25 @@
 #include <curses.h>
 #include <cstdlib>
 #include "game.h"
-
-enum RectSide{
-    RCT_LEFTTOP,
-    RCT_TOP,
-    RCT_RIGHTTOP,
-    RCT_RIGHT,
-    RCT_RIGHTBOTTOM,
-    RCT_BOTTOM,
-    RCT_LEFTBOTTOM,
-    RCT_LEFT
-};
+#include "gamerect.h"
 
 void update_table(int table_x, int table_w)
 {
-    color_set(5);
+    game_color_set(5);
 
     if (table_x > 0)
         mvaddch(TERM_HEIGHT - 1, table_x-1, '-');
     if (table_x + table_w < TERM_WIDTH)
         mvaddch(TERM_HEIGHT - 1, table_x+table_w, '-');
 
-    color_set(7);
+    game_color_set(7);
     mvaddch(TERM_HEIGHT - 1,table_x,'[');
     mvaddch(TERM_HEIGHT - 1,table_x + table_w - 1,']');
     for (int k = table_x + 1; k < table_x+table_w - 1; k++)
-        mvaddch(TERM_HEIGHT - 1,k,205);
+        mvaddch(TERM_HEIGHT - 1,k,'=');
 }
 
-void color_set(int c)
+void game_color_set(int c)
 {
     if (c > 15)
         c -= 15;
@@ -43,7 +33,7 @@ void color_set(int c)
     }
 }
 
-void color_init(void)
+void game_color_init(void)
 {
     start_color();
     for (int i = 1; i <= 7; ++i)
@@ -73,135 +63,41 @@ int getInt(int def)
     return ret;
 }
 
-int getRectSteps(int w, int h)
-{
-    return 2*w + 2*h - 2;
-}
-
-RectSide getRectSideOffset(int w, int h, int step, int * offset)
-{
-    if (step == 0)
-    {
-        *offset = 0;
-        return RCT_LEFTTOP;
-    }
-    if (step < w)
-    {
-        *offset = step;
-        return RCT_TOP;
-    }
-    if (step == w)
-    {
-        *offset = 0;
-        return RCT_RIGHTTOP;
-    }
-    step -= w;
-    if (step < h - 1)
-    {
-        *offset = step;
-        return RCT_RIGHT;
-    }
-    if (step == h - 1)
-    {
-        *offset = 0;
-        return RCT_RIGHTBOTTOM;
-    }
-    step -= (h - 1);
-    if (step < w)
-    {
-        *offset = step;
-        return RCT_BOTTOM;
-    }
-    if (step == w)
-    {
-        *offset = 0;
-        return RCT_LEFTBOTTOM;
-    }
-    *offset = step - w;
-    return RCT_LEFT;
-}
-
-void getRectXY(int x, int y, int w, int h, int step, int * ret_x, int * ret_y)
-{
-    // step 0 means the left top corner, the rest is clockwise
-    if (step >= getRectSteps(w,h)) return;
-
-    int offset;
-    RectSide side = getRectSideOffset(w,h,step,&offset);
-    switch(side)
-    {
-        case RCT_LEFTTOP:
-            *ret_x = x;
-            *ret_y = y;
-            return;
-        case RCT_TOP:
-            *ret_x = x + offset;
-            *ret_y = y;
-            return;
-        case RCT_RIGHTTOP:
-            *ret_x = x + w;
-            *ret_y = y;
-            return;
-        case RCT_RIGHT:
-            *ret_x = x + w;
-            *ret_y = y + offset;
-            return;
-        case RCT_RIGHTBOTTOM:
-            *ret_x = x + w;
-            *ret_y = y + h - 1;
-            return;
-        case RCT_BOTTOM:
-            *ret_x = x + w - offset;
-            *ret_y = y + h - 1;
-            return;
-        case RCT_LEFTBOTTOM:
-            *ret_x = x;
-            *ret_y = y + h - 1;
-            return;
-        case RCT_LEFT:
-            *ret_x = x;
-            *ret_y = y + h - 1 - offset;
-            return;
-    }
-}
-
-void rect(int x, int y, int w, int h, int c, int ch)
-{
-    int steps = getRectSteps(w,h);
-    color_set(c);
-    for (int i = 0; i < steps; i++)
-    {
-        int rx;
-        int ry;
-        getRectXY(x, y, w, h, i, &rx, &ry);
-        mvaddch(ry,rx,ch);
-        getRectXY(x, y, w, h, i + steps/2, &rx, &ry);
-        mvaddch(ry,rx,ch);
-    }
-}
-
 void show_end(const char * str)
 {
     int w;
 
     const int SZ = 16;
 
+    GameRect * rct = new GameRect();
+
+    rct->setColor(14);
+    rct->setY(12);
+    rct->setHeight(5);
     for (w = 1; w < SZ-1; w+=2)
     {
-        rect(TERM_WIDTH/2-SZ/2+6-w/2, 12, w, 5, 14, '#');
+        rct->setX(TERM_WIDTH/2-SZ/2+6-w/2);
+        rct->setWidth(w);
+        rct->setChar('#');
+        rct->drawRect();
         if (w >= 5)
         {
-            color_set(6 + (w/2));
+            game_color_set(6 + (w/2));
             mvaddch(14, TERM_WIDTH/2-SZ/2+8-w/2, str[6 - (w/2)]);
-            color_set(6 + (w/2));
+            game_color_set(6 + (w/2));
             mvaddch(14, TERM_WIDTH/2-SZ/2+5+w/2, str[3 + (w/2)]);
         }
         refresh();
         delay_output(30);
-        rect(TERM_WIDTH/2-SZ/2+6-w/2,12,w,5,7,' ');
+        rct->setChar(' ');
+        rct->drawRect();
     }
-    rect(TERM_WIDTH/2-SZ/2+6-w/2,12,w,5,14,'#');
+    rct->setX(TERM_WIDTH/2-SZ/2+6-w/2);
+    rct->setWidth(w);
+    rct->setChar('#');
+    rct->drawRect();
     refresh();
+    delete rct;
 }
 
 void update_game(int * scores, int * lives, int * bx)
@@ -228,7 +124,7 @@ void update_game(int * scores, int * lives, int * bx)
 
     mvaddch(ball_y,ball_x,' ');
 
-    color_set(7);
+    game_color_set(7);
 
     mvaddch(ball_y,ball_x,' ');
 

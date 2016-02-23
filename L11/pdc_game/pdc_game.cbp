@@ -34,13 +34,13 @@
 			<Add directory="D:/Apps/CodeBlocks/share/MyLibs/pdcurses" />
 		</Compiler>
 		<Linker>
-			<Add library="pdcurses" />
+			<Add library="ncurses" />
 			<Add directory="D:/Apps/CodeBlocks/share/MyLibs/pdcurses/win32" />
 		</Linker>
-		<Unit filename="game.cpp">
-			<Option compilerVar="CPP" />
-		</Unit>
+		<Unit filename="game.cpp" />
 		<Unit filename="game.h" />
+		<Unit filename="gamerect.cpp" />
+		<Unit filename="gamerect.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

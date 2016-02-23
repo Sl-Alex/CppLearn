@@ -3,15 +3,16 @@
 #include <time.h>
 #include <curses.h>
 #include "game.h"
+#include "gamerect.h"
 
 using namespace std;
 
 void select_mode (bool * mode)
 {
     clear();
-    color_set(11);
+    game_color_set(11);
     mvprintw(10,30, "Choose play mode");
-    color_set(7);
+    game_color_set(7);
     mvprintw(12,32, "-> Normal");
     mvprintw(13,35, "Demo");
 
@@ -56,6 +57,8 @@ int main()
     // Maximum number of scores
     const int scoresmax = 99;
 
+    GameRect * rct = new GameRect();
+
     // Table parameters
     int table_w = 20;
     int table_x = TERM_WIDTH/2 - table_w/2;
@@ -75,48 +78,48 @@ int main()
 	curs_set(0);
 
 	// Initialize palette
-	color_init();
+	game_color_init();
 
 	// Play mode selection
 	select_mode(&mode_auto);
 
 	// Input X coordinate
     clear();
-    color_set(11);
+    game_color_set(11);
     mvprintw(10,30, "Enter the X position");
-    color_set(4);
+    game_color_set(4);
     mvprintw(11,30, "Default is %i", rect_x);
-    color_set(7);
+    game_color_set(7);
     mvprintw(13,32, "-> ");
     rect_x = getInt(rect_x);
 
     // Input Y coordinate
     clear();
-    color_set(11);
+    game_color_set(11);
     mvprintw(10,30, "Enter the Y position");
-    color_set(4);
+    game_color_set(4);
     mvprintw(11,30, "Default is %i", rect_y);
-    color_set(7);
+    game_color_set(7);
     mvprintw(13,32, "-> ");
     rect_y = getInt(rect_y);
 
     // Enter width
     clear();
-    color_set(11);
+    game_color_set(11);
     mvprintw(10,30, "Enter the width of the rectangle");
-    color_set(4);
+    game_color_set(4);
     mvprintw(11,30, "Default is %i", rect_w);
-    color_set(7);
+    game_color_set(7);
     mvprintw(13,32, "-> ");
     rect_w = getInt(rect_w);
 
     // Enter height
     clear();
-    color_set(11);
+    game_color_set(11);
     mvprintw(10,30, "Enter the height of the rectangle");
-    color_set(4);
+    game_color_set(4);
     mvprintw(11,30, "Default is %i", rect_h);
-    color_set(7);
+    game_color_set(7);
     mvprintw(13,32, "-> ");
     rect_h = getInt(rect_h);
 
@@ -125,12 +128,12 @@ int main()
     char str1[] = "PRESS ANY KEY ";
     for (int i = 1; i <= 14; i++)
     {
-        color_set(i);
+        game_color_set(i);
         mvaddch(rect_y + rect_h/2, rect_x + i + rect_w/2 - 14/2, str1[i-1]);
     }
 
     // Prepare the game layout
-    color_set(13);
+    game_color_set(13);
     mvprintw(2,2,"L %u", lives);
     mvprintw(2,8,"S %3u", scores);
 
@@ -138,8 +141,8 @@ int main()
     int cnt = 0;
     while(true)
     {
-        int rx = 1 + rand()*78/(RAND_MAX+1);
-        int ry = 1 + rand()*17/(RAND_MAX+1);
+        int rx = 1 + rand()%78;
+        int ry = 1 + rand()%17;
 
         if ((mvinch(ry,rx) & 0x7F) != ' ')
             continue;
@@ -158,14 +161,14 @@ int main()
     }
 
     // Draw all borders
-    color_set(5);
+    game_color_set(5);
     for (int i = 0; i < 80; i++)
         mvaddch(0, i, '#');
     for (int i = 0; i < 80; i++)
-        mvaddch(24, i, '-');
-    for (int i = 0; i < 24; i++)
+        mvaddch(TERM_HEIGHT-1, i, '-');
+    for (int i = 0; i < TERM_HEIGHT; i++)
         mvaddch(i, 0, '#');
-    for (int i = 0; i < 24; i++)
+    for (int i = 0; i < TERM_HEIGHT; i++)
         mvaddch(i, 79, '#');
     for (int i = 1; i < 14; i++)
         mvaddch(4, i, '#');
@@ -186,28 +189,31 @@ int main()
     char str2[] = "HELLO_PDCURSES";
     for (int i = 1; i <= 14; i++)
     {
-        color_set(i);
+        game_color_set(i);
         mvaddch(rect_y + rect_h/2, rect_x + i + rect_w/2 - 14/2, str2[i-1]);
     }
 
     // Enter the main loop
     int col = 1;
+    rct->setX(rect_x);
+    rct->setY(rect_y);
+    rct->setWidth(rect_w);
+    rct->setHeight(rect_h);
     while ((lives > 0) && (scores < scoresmax))
     {
         // Output pointer to the current color
         mvaddch(rect_y+rect_h/2+1,rect_x + col + rect_w/2 - 14/2, '^');
 
         // Draw rect
-        int steps = getRectSteps(rect_w,rect_h);
+        int steps = rct->stepsCount();
         for (int j = 0; j < steps/2 ; j++)
         {
             int rx;
             int ry;
-            color_set(col);
-            getRectXY(rect_x, rect_y, rect_w, rect_h, j, &rx, &ry);
-            mvprintw(ry,rx,"#");
-            getRectXY(rect_x, rect_y, rect_w, rect_h, j + steps/2, &rx, &ry);
-            mvprintw(ry,rx,"#");
+            rct->setColor(col);
+            rct->setChar('#');
+            rct->drawStep(j);
+            rct->drawStep(j + steps/2);
 
             // Get user input
             int mych=getch();
@@ -242,7 +248,7 @@ int main()
             update_table(table_x,table_w);
 
             // Output the stats
-            color_set(13);
+            game_color_set(13);
             mvprintw(2,2,"L %u", lives);
             mvprintw(2,8,"S %3u", scores);
 
@@ -255,10 +261,9 @@ int main()
             delay_output(50);
 
             // Clear old positions for '#' chars
-            getRectXY(rect_x, rect_y, rect_w, rect_h, j, &rx, &ry);
-            mvprintw(ry,rx," ");
-            getRectXY(rect_x, rect_y, rect_w, rect_h, j + steps/2, &rx, &ry);
-            mvprintw(ry,rx," ");
+            rct->setChar(' ');
+            rct->drawStep(j);
+            rct->drawStep(j + steps / 2);
         }
         // Clear old positions for '^' chars
         mvaddch(rect_y+rect_h/2+1,rect_x + col + rect_w/2 - 14/2, ' ');
@@ -278,5 +283,6 @@ int main()
 
     // end
     endwin();
+    delete rct;
     return 0;
 }
