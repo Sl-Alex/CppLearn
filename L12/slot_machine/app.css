@@ -9,6 +9,16 @@ QDialog{
 QLabel{
     color: #FFFFFF;
 }
+QLabel[isHeader="true"]{
+    font-size: 16pt;
+    font-weight: bold;
+    color: #FE9A2E;
+}
+QLabel[isStats="true"]{
+    font-size: 12pt;
+    font-weight: bold;
+    color: #40FF00;
+}
 QMenuBar{
     color: #D0D0D0;
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,

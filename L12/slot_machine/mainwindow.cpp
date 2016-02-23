@@ -33,24 +33,15 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel * moneyLabel = new QLabel(tr("MONEY"));
     QLabel * spinsLabel = new QLabel(tr("SPINS"));
 
-    QFont font = moneyLabel->font();
-    font.setPointSize(16);
-    font.setBold(true);
+    moneyLabel->setProperty("isHeader",true);
+    spinsLabel->setProperty("isHeader",true);
 
-    moneyLabel->setFont(font);
-    spinsLabel->setFont(font);
-    moneyLabel->setStyleSheet("color: #FE9A2E;");
-    spinsLabel->setStyleSheet(moneyLabel->styleSheet());
-
-    font.setPointSize(12);
     moneyText = new QLabel();
     moneyText->setNum(mCoins);
-    moneyText->setStyleSheet("color: #40FF00;");
-    moneyText->setFont(font);
+    moneyText->setProperty("isStats", true);
 
     spinsText = new QLabel("0");
-    spinsText->setStyleSheet(moneyText->styleSheet());
-    spinsText->setFont(font);
+    spinsText->setProperty("isStats", true);
 
     QPixmap pix;
     for (int i = 0; i < 3; ++i)

@@ -22,15 +22,10 @@ HelpDialog::HelpDialog(QWidget *parent)
     QLabel * header1Text = new QLabel(tr("RESULT"));
     QLabel * header2Text = new QLabel(tr("RULE"));
     QLabel * header3Text = new QLabel(tr("SCORES"));
-    QFont font = header1Text->font();
-    font.setPointSize(12);
-    font.setBold(true);
-    header1Text->setFont(font);
-    header2Text->setFont(font);
-    header3Text->setFont(font);
-    header1Text->setStyleSheet("color: #FE9A2E;");
-    header2Text->setStyleSheet(header1Text->styleSheet());
-    header3Text->setStyleSheet(header1Text->styleSheet());
+    header1Text->setProperty("isHeader",true);
+    header2Text->setProperty("isHeader",true);
+    header3Text->setProperty("isHeader",true);
+
     rulesLayout->addWidget(header1Text,0,0);
     rulesLayout->addWidget(header2Text,0,1);
     rulesLayout->addWidget(header3Text,0,2);
@@ -49,9 +44,7 @@ HelpDialog::HelpDialog(QWidget *parent)
     rule1Pics->addWidget(rule1pic3);
     QLabel * rule1Text = new QLabel(tr("3 identical pictures"));
     QLabel * rule1Result = new QLabel("10");
-    font.setPointSize(10);
-    rule1Result->setFont(font);
-    rule1Result->setStyleSheet("color: #40FF00;");
+    rule1Result->setProperty("isStats", true);
     rulesLayout->addLayout(rule1Pics,1,0);
     rulesLayout->addWidget(rule1Text,1,1);
     rulesLayout->addWidget(rule1Result,1,2);
@@ -67,8 +60,7 @@ HelpDialog::HelpDialog(QWidget *parent)
     rule2Pics->addWidget(rule2pic2);
     QLabel * rule2Text = new QLabel(tr("2 identical pictures"));
     QLabel * rule2Result = new QLabel("5");
-    rule2Result->setFont(font);
-    rule2Result->setStyleSheet(rule1Result->styleSheet());
+    rule2Result->setProperty("isStats", true);
     rulesLayout->addLayout(rule2Pics,2,0,1,1,Qt::AlignLeft);
     rulesLayout->addWidget(rule2Text,2,1);
     rulesLayout->addWidget(rule2Result,2,2);
@@ -79,8 +71,7 @@ HelpDialog::HelpDialog(QWidget *parent)
     rule3pic->setPixmap(pix);
     QLabel * rule3Text = new QLabel(tr("Each dollar"));
     QLabel * rule3Result = new QLabel("2");
-    rule3Result->setFont(font);
-    rule3Result->setStyleSheet(rule1Result->styleSheet());
+    rule3Result->setProperty("isStats", true);
     rulesLayout->addWidget(rule3pic,3,0,1,1,Qt::AlignLeft);
     rulesLayout->addWidget(rule3Text,3,1);
     rulesLayout->addWidget(rule3Result,3,2);
