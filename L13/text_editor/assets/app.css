@@ -1,3 +1,6 @@
+QTextEdit {
+    font: 14pt "Courier";
+}
 QLineEdit {
     min-height: 25px;
     max-height: 40px;

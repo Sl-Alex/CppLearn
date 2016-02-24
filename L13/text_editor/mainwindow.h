@@ -16,17 +16,25 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 private slots:
-    void onExit(void);
+    void onNew(void);
+    void onSave(void);
+    void onSaveAs(void);
+    void onClose(void);
+    void onTextChanged(void);
+    void onHelp(void);
 private:
     QTextEdit * textEdit;
     QMenu *fileMenu;
     QAction *helpAction;
-    QAction *exitAction;
+    QAction *closeAction;
+    QAction *newAction;
     QAction *openAction;
     QAction *saveAction;
     QAction *saveAsAction;
     bool mModified;
+    QString mFileName;
 
+    bool suggestSave(void);
     void closeEvent(QCloseEvent * event);
 };
 
