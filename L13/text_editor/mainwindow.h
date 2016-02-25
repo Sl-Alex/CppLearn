@@ -42,6 +42,7 @@ private:
     QString mFileName;
 
     bool suggestSave(void);
+    void updateTitle(void);
     void closeEvent(QCloseEvent * event);
 };
 

@@ -26,8 +26,8 @@ QScrollBar::handle:vertical {
 }
 QScrollBar::add-line:horizontal {
     border: 1px solid black;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #D0D0D0, stop: 1 #909090);
     width: 20px;
@@ -36,18 +36,18 @@ QScrollBar::add-line:horizontal {
 }
 QScrollBar::add-line:vertical {
     border: 1px solid black;
-    border-top-right-radius: 8px;
-    border-top-left-radius: 8px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
         stop: 0 #D0D0D0, stop: 1 #909090);
     height: 20px;
-    subcontrol-position: top;
+    subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 QScrollBar::sub-line:horizontal {
     border: 1px solid black;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #D0D0D0, stop: 1 #909090);
     width: 20px;
@@ -56,20 +56,20 @@ QScrollBar::sub-line:horizontal {
 }
 QScrollBar::sub-line:vertical {
     border: 1px solid black;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
     background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
         stop: 0 #D0D0D0, stop: 1 #909090);
     height: 20px;
-    subcontrol-position: bottom;
+    subcontrol-position: top;
     subcontrol-origin: margin;
 }
 QScrollBar::left-arrow, QScrollBar::right-arrow, QScrollBar::up-arrow, QScrollBar::down-arrow
 {      
     border: none;
     background: transparent;
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
 }
 QScrollBar::left-arrow
 {
@@ -81,11 +81,11 @@ QScrollBar::right-arrow
 }
 QScrollBar::up-arrow
 {      
-    image: url(../text_editor/assets/arrow_right.png);
+    image: url(../text_editor/assets/arrow_up.png);
 }
 QScrollBar::down-arrow
 {      
-    image: url(../text_editor/assets/arrow_right.png);
+    image: url(../text_editor/assets/arrow_down.png);
 }
 QScrollBar::add-page, QScrollBar::sub-page {
     background: none;

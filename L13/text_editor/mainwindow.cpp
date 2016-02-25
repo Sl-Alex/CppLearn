@@ -56,9 +56,9 @@ MainWindow::MainWindow(QWidget *parent)
     colLabel->setText(statusCol.arg(0));
     rowLabel->setText(statusRow.arg(0));
 
-    setWindowTitle(tr("Simple Text Editor"));
+    textEdit->setText("abbsdwrege ty beyrthny tyb etttt eety trbnetybe rbrtw btr hrtbtynuy muymryju\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsfsfdsdfsdf");
 
-    textEdit->setText("abbsdwrege ty beyrthny tyb etttt eety trbnetybe rbrtw btr hrtbtynuy muymryju\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\sfsfdsdfsdf");
+    updateTitle();
 }
 
 MainWindow::~MainWindow()
@@ -116,6 +116,7 @@ void MainWindow::onNew(void)
         mModified = false;
         mFileName = "";
     }
+    updateTitle();
 }
 
 /// @todo Implement saving procedure
@@ -148,6 +149,7 @@ void MainWindow::onSave(void)
             QMessageBox::warning(this, tr("Error"), "Cannot be opened for write!!!", QMessageBox::Ok, QMessageBox::Ok);
         }
     }
+    updateTitle();
 }
 
 void MainWindow::onSaveAs(void)
@@ -164,11 +166,16 @@ void MainWindow::onSaveAs(void)
         mModified = oldModified;
         mFileName = oldFileName;
     }
+    updateTitle();
 }
 
 void MainWindow::onTextChanged(void)
 {
+    if (mModified)
+        return;
+
     mModified = true;
+    updateTitle();
 }
 
 void MainWindow::onCursorPositionChanged(void)
@@ -185,5 +192,45 @@ void MainWindow::onHelp(void)
 
 void MainWindow::onOpen(void)
 {
-    QMessageBox::warning(this, tr("Error"), "Cannot be opened for write!!!", QMessageBox::Ok, QMessageBox::Ok);
+    if (suggestSave() == false)
+        return;
+
+    mModified = false;
+
+    mFileName = QFileDialog::getOpenFileName(this,tr("Open File"),"","");
+
+    if (mFileName.isEmpty() == false)
+    {
+        QFile file(mFileName);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            textEdit->clear();
+            QByteArray ba = file.readAll();
+            textEdit->setText(QString(ba));
+            mModified = false;
+            file.close();
+        }
+        else
+        {
+            QMessageBox::warning(this, tr("Error"), "Cannot be opened for read!!!", QMessageBox::Ok, QMessageBox::Ok);
+        }
+    }
+    updateTitle();
+}
+
+void MainWindow::updateTitle(void)
+{
+    if (mFileName.isEmpty())
+    {
+        setWindowTitle(tr("Simple Text Editor"));
+        return;
+    }
+
+    QFileInfo fi(mFileName);
+    QString title = "";
+    if (mModified)
+        title = "*";
+    title = title.append(fi.fileName()).append(" - ").append(fi.absoluteFilePath());
+    setWindowTitle(title);
+
 }
