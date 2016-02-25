@@ -57,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent)
     rowLabel->setText(statusRow.arg(0));
 
     setWindowTitle(tr("Simple Text Editor"));
+
+    textEdit->setText("abbsdwrege ty beyrthny tyb etttt eety trbnetybe rbrtw btr hrtbtynuy muymryju\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\sfsfdsdfsdf");
 }
 
 MainWindow::~MainWindow()
