@@ -91,11 +91,20 @@ QScrollBar::add-page, QScrollBar::sub-page {
     background: none;
 }
 QStatusBar {
-	color: white;
+    color: #E0E0E0;
+    background: #404040;
+}
+QStatusBar::item {
+    color: #E0E0E0;
+    border: none;
+    background: #404040;
 }
 QToolBar {
     border: none;
     spacing: 3px; /* spacing between items in the tool bar */
+}
+QToolButton:hover {
+    background-color: #808080;
 }
 QTextEdit {
     font: 11pt;
@@ -123,6 +132,7 @@ QDialog{
 }
 QLabel{
     color: #FFFFFF;
+    border: none;
 }
 QLabel[isHeader="true"]{
     font-size: 16pt;

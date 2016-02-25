@@ -18,3 +18,5 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     helpdialog.h
+
+RC_FILE = text_editor.rc
