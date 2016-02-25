@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "helpdialog.h"
+#include "aboutdialog.h"
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     fileMenu->addSeparator();
     closeAction = fileMenu->addAction(tr("E&xit"), this, SLOT(onClose()), QKeySequence::Close);
     closeAction->setStatusTip(tr("Exit from the program"));
-    helpAction = menuBar()->addAction(tr("&Help..."), this, SLOT(onHelp()));
-    helpAction->setStatusTip(tr("Show help"));
+    aboutAction = menuBar()->addAction(tr("&About..."), this, SLOT(onAbout()));
+    aboutAction->setStatusTip(tr("Show about window"));
 
     connect(textEdit, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
     connect(textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
@@ -44,19 +44,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     QPixmap pix(assetsPath.arg("page_add.png"));
     toolbar->addAction(QIcon(pix),"New",this,SLOT(onNew()));
+    toolbar->addSeparator();
+    pix.load(assetsPath.arg("folder_page.png"));
+    toolbar->addAction(QIcon(pix), "Open",this, SLOT(onOpen()));
     pix.load(assetsPath.arg("page_save.png"));
     toolbar->addAction(QIcon(pix), "Save",this, SLOT(onSave()));
     toolbar->setFloatable(false);
     toolbar->setMovable(false);
-    toolbar->addSeparator();
     colLabel = new QLabel();
     rowLabel = new QLabel();
     statusBar()->addPermanentWidget(colLabel,0);
     statusBar()->addPermanentWidget(rowLabel,0);
     colLabel->setText(statusCol.arg(0));
     rowLabel->setText(statusRow.arg(0));
-
-    textEdit->setText("abbsdwrege ty beyrthny tyb etttt eety trbnetybe rbrtw btr hrtbtynuy muymryju\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsfsfdsdfsdf");
 
     updateTitle();
 }
@@ -83,11 +83,10 @@ bool MainWindow::suggestSave(void)
     if (mModified)
     {
         int ret = QMessageBox::warning(this, tr("Text Editor"),
-                                       tr("Current document has been modified.\n"
-                                          "Do you want to save your changes?"),
-                                       QMessageBox::Save | QMessageBox::Discard
-                                       | QMessageBox::Cancel,
-                                       QMessageBox::Save);
+            tr("Current document has been modified.\n"
+            "Do you want to save your changes?"),
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+            QMessageBox::Save);
 
         if (ret == QMessageBox::Cancel)
             return false;
@@ -184,9 +183,9 @@ void MainWindow::onCursorPositionChanged(void)
     rowLabel->setText(statusRow.arg(textEdit->textCursor().blockNumber()));
 }
 
-void MainWindow::onHelp(void)
+void MainWindow::onAbout(void)
 {
-    HelpDialog dlg(this);
+    AboutDialog dlg(this);
     dlg.exec();
 }
 

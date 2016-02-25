@@ -14,9 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    helpdialog.cpp
+    aboutdialog.cpp
 
 HEADERS  += mainwindow.h \
-    helpdialog.h
+    aboutdialog.h
 
 RC_FILE = text_editor.rc

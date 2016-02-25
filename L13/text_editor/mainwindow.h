@@ -26,11 +26,11 @@ private slots:
     void onClose(void);
     void onTextChanged(void);
     void onCursorPositionChanged(void);
-    void onHelp(void);
+    void onAbout(void);
 private:
     QTextEdit * textEdit;
     QMenu *fileMenu;
-    QAction *helpAction;
+    QAction *aboutAction;
     QAction *closeAction;
     QAction *newAction;
     QAction *openAction;
