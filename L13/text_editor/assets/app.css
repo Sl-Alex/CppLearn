@@ -1,5 +1,56 @@
+QScrollBar {
+    border: 1px solid black;
+    background: #404040;
+    height: 15px;
+    margin: 0px 20px 0 20px;
+}
+QScrollBar::handle {
+/*    background: #A0A0A0;*/
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #A0A0A0, stop: 1 #808080);
+    min-width: 20px;
+}
+QScrollBar::add-line {
+    border: 1px solid black;
+    border-radius: 6px;
+    background: #808080;
+    width: 20px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line {
+    border: 1px solid black;
+    border-radius: 6px;
+    background: #808080;
+    width: 20px;
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+    border: 1px solid black;
+    width: 3px;
+    height: 3px;
+    background: white;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+QStatusBar {
+	color: white;
+}
+QToolBar {
+    border: none;
+    spacing: 3px; /* spacing between items in the tool bar */
+}
 QTextEdit {
-    font: 14pt "Courier";
+    font: 11pt;
+	font-family: Consolas, Courier, monospace;
+	background: #2E2E2E;
+	color: #04B404;
+    border: none;
 }
 QLineEdit {
     min-height: 25px;
@@ -11,6 +62,8 @@ QLineEdit {
 QMainWindow{
     color: #FFFFFF;
     background: #303030;
+	min-width: 500px;
+	min-height: 300px;
 }
 QDialog{
     color: #FFFFFF;

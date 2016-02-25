@@ -9,6 +9,8 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QKeySequence>
+#include <QStatusBar>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,12 +20,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     textEdit = new QTextEdit(this);
     this->setCentralWidget( textEdit );
+    textEdit->setWordWrapMode(QTextOption::NoWrap);
 
     fileMenu = menuBar()->addMenu(tr("&File"));
     newAction = fileMenu->addAction(tr("&New"), this, SLOT(onNew()),QKeySequence::New);
+    newAction->setStatusTip(tr("Create a new text document"));
     openAction = fileMenu->addAction(tr("&Open..."), this, SLOT(onOpen()),QKeySequence::Open);
+    openAction->setStatusTip(tr("Open an existing text document"));
     saveAction = fileMenu->addAction(tr("&Save"), this, SLOT(onSave()), QKeySequence::Save);
+    saveAction->setStatusTip(tr("Save current document"));
     saveAsAction = fileMenu->addAction(tr("Save &As..."), this, SLOT(onSaveAs()),QKeySequence::SaveAs);
+    saveAsAction->setStatusTip(tr("Save current document under different name"));
     fileMenu->addSeparator();
     closeAction = fileMenu->addAction(tr("E&xit"), this, SLOT(onClose()), QKeySequence::Close);
     closeAction->setStatusTip(tr("Exit from the program"));
@@ -31,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     helpAction->setStatusTip(tr("Show help"));
 
     connect(textEdit, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+    connect(textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
 
     QToolBar *toolbar = addToolBar("main toolbar");
 
@@ -41,6 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar->setFloatable(false);
     toolbar->setMovable(false);
     toolbar->addSeparator();
+    colLabel = new QLabel();
+    rowLabel = new QLabel();
+    statusBar()->addPermanentWidget(colLabel,0);
+    statusBar()->addPermanentWidget(rowLabel,0);
+    colLabel->setText(statusCol.arg(0));
+    rowLabel->setText(statusRow.arg(0));
+
+    setWindowTitle(tr("Simple Text Editor"));
 }
 
 MainWindow::~MainWindow()
@@ -153,8 +169,19 @@ void MainWindow::onTextChanged(void)
     mModified = true;
 }
 
+void MainWindow::onCursorPositionChanged(void)
+{
+    colLabel->setText(statusCol.arg(textEdit->textCursor().columnNumber()));
+    rowLabel->setText(statusRow.arg(textEdit->textCursor().blockNumber()));
+}
+
 void MainWindow::onHelp(void)
 {
     HelpDialog dlg(this);
     dlg.exec();
+}
+
+void MainWindow::onOpen(void)
+{
+    QMessageBox::warning(this, tr("Error"), "Cannot be opened for write!!!", QMessageBox::Ok, QMessageBox::Ok);
 }
