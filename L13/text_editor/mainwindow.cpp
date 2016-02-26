@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(textEdit, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
     connect(textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
 
-    QToolBar *toolbar = addToolBar("main toolbar");
+    QToolBar *toolbar = addToolBar(tr("Main toolbar"));
 
     QPixmap pix(assetsPath.arg("page_add.png"));
     toolbar->addAction(QIcon(pix),"New",this,SLOT(onNew()));
@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     pix.load(assetsPath.arg("folder_page.png"));
     toolbar->addAction(QIcon(pix), "Open",this, SLOT(onOpen()));
     pix.load(assetsPath.arg("page_save.png"));
-    toolbar->addAction(QIcon(pix), "Save",this, SLOT(onSave()));
+    toolbar->addAction(QIcon(pix), tr("Save"),this, SLOT(onSave()));
     toolbar->setFloatable(false);
     toolbar->setMovable(false);
     colLabel = new QLabel();
@@ -133,7 +133,7 @@ void MainWindow::onSave(void)
             stream << textEdit->toPlainText();
             if (file.flush() == false)
             {
-                QMessageBox::warning(this, tr("Error"), "Cannot save text", QMessageBox::Ok, QMessageBox::Ok);
+                QMessageBox::warning(this, tr("Error"), tr("Cannot save text"), QMessageBox::Ok, QMessageBox::Ok);
             }
             else
             {
@@ -145,7 +145,7 @@ void MainWindow::onSave(void)
         }
         else
         {
-            QMessageBox::warning(this, tr("Error"), "Cannot be opened for write!!!", QMessageBox::Ok, QMessageBox::Ok);
+            QMessageBox::warning(this, tr("Error"), tr("Cannot open for write"), QMessageBox::Ok, QMessageBox::Ok);
         }
     }
     updateTitle();
@@ -211,7 +211,7 @@ void MainWindow::onOpen(void)
         }
         else
         {
-            QMessageBox::warning(this, tr("Error"), "Cannot be opened for read!!!", QMessageBox::Ok, QMessageBox::Ok);
+            QMessageBox::warning(this, tr("Error"), tr("Cannot open for read"), QMessageBox::Ok, QMessageBox::Ok);
         }
     }
     updateTitle();
@@ -229,7 +229,7 @@ void MainWindow::updateTitle(void)
     QString title = "";
     if (mModified)
         title = "*";
-    title = title.append(fi.fileName()).append(" - ").append(fi.absoluteFilePath());
+    title = title.append(fi.fileName()).append(" - ").append(fi.absolutePath());
     setWindowTitle(title);
 
 }
