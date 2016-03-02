@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/app.css</file>
+        <file>assets/arrow_down.png</file>
+        <file>assets/arrow_left.png</file>
+        <file>assets/arrow_right.png</file>
+        <file>assets/arrow_up.png</file>
+        <file>assets/folder_page.png</file>
+        <file>assets/page_add.png</file>
+        <file>assets/page_save.png</file>
+    </qresource>
+</RCC>
