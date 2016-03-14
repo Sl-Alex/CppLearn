@@ -71,7 +71,7 @@ private:
 #endif
             delete mObj;
         }
-        delete[] pRefCount;
+        delete pRefCount;
         mObj = NULL;
     }
 
