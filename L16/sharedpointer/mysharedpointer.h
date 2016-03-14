@@ -15,6 +15,8 @@ public:
         :mObj(obj),
         mArray(isArray)
     {
+        pRefCount = new size_t;
+        *pRefCount = 1;
 #ifdef PTR_DEBUG
         cout << "created" << endl;
 #endif
@@ -28,10 +30,12 @@ public:
     T* operator->() { return mObj; }
     T& operator* () { return *mObj; }
     MySharedPointer& operator=(const MySharedPointer& obj) {
-        mRefCount++;
+        deletePointer();
+        pRefCount = obj.pRefCount;
+        (*pRefCount)++;
 #ifdef PTR_DEBUG
         cout << "operator=" << endl;
-        cout << "mRefCount = " << mRefCount << endl;
+        cout << "mRefCount = " << *pRefCount << endl;
 #endif
         mObj = obj.mObj;
         mArray = obj.mArray;
@@ -44,13 +48,13 @@ public:
 private:
     void deletePointer(void)
     {
-        if (mRefCount)
-            mRefCount--;
+        if (*pRefCount)
+            (*pRefCount)--;
 
 #ifdef PTR_DEBUG
-            cout << "mRefCount-- = " << mRefCount << endl;
+            cout << "mRefCount-- = " << *pRefCount << endl;
 #endif
-        if (mRefCount > 0)
+        if ((*pRefCount) > 0)
             return;
 
         if (mArray)
@@ -67,14 +71,13 @@ private:
 #endif
             delete mObj;
         }
+        delete[] pRefCount;
         mObj = NULL;
     }
 
     T * mObj;
     bool mArray;
-    static int mRefCount;
+    size_t * pRefCount;
 };
-
-template<typename T> int MySharedPointer<T>::mRefCount = 1;
 
 #endif // MYSHAREDPOINTER_H

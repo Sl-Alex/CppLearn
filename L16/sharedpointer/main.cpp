@@ -5,11 +5,8 @@
 
 using namespace std;
 
-int main(int argc, char *argv[])
+int main()
 {
-//    QCoreApplication a(argc, argv);
-
-
     int i = 2;
     while (i--)
     {
@@ -23,13 +20,7 @@ int main(int argc, char *argv[])
         mPtr2 = mPtr1;
         cout << "mPtr3\n";
         MySharedPointer<int> mPtr3;
-        mPtr3 = mPtr2;
-        cout << "delete 1\n";
-        mPtr1.~MySharedPointer();
-        cout << "deleted\n";
+        mPtr3 = mPtr1;
     }
-
-
-//    return a.exec();
 }
 
