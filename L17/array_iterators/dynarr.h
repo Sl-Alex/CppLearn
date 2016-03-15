@@ -5,8 +5,8 @@
 using namespace std;
 
 // iterator class is parametrized by pointer type
-template <typename T>
-class DynArrIterator : public std::iterator<std::forward_iterator_tag, T>
+template <typename T, bool R /* Reversed */>
+class DynArrIterator // : public std::iterator<std::forward_iterator_tag, T>
 {
     T* p;
 public:
@@ -15,7 +15,10 @@ public:
     //! Надмірна --- буде створено автоматично, наведено для повноти
     DynArrIterator(const DynArrIterator& mit) : p(mit.p) {} // Copy constructor (is implemented by default)
     DynArrIterator& operator++() {  // Prefix Increment operator
-        ++p;
+        if (!R)
+            ++p;
+        else
+            --p;
         return *this;
     }
     DynArrIterator operator++(int) // Postfix increment operator
@@ -39,8 +42,10 @@ template <typename T>
 class DynArr
 {
     public:
-        DynArrIterator<T> begin() {return DynArrIterator<T>(m_Arr);}
-        DynArrIterator<T> end() {return DynArrIterator<T>(&m_Arr[m_Size]);}
+        DynArrIterator<T,false> begin() {return DynArrIterator<T,false>(m_Arr);}
+        DynArrIterator<T,false> end() {return DynArrIterator<T,false>(&m_Arr[m_Size]);}
+        DynArrIterator<T,true> rbegin() {return DynArrIterator<T,true>(&m_Arr[m_Size-1]);}
+        DynArrIterator<T,true> rend() {return DynArrIterator<T,true>(m_Arr - 1);}
         static const size_t DEFAULT_SIZE = 5;
         static const size_t SIZE_INCREMENT = 5;
 

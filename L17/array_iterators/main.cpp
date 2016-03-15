@@ -27,8 +27,16 @@ int main()
     for (auto it = darr.begin(); it != darr.end(); ++it)
         cout << *it << endl;
 
+    cout << "Dyn arr output with reversed iterator: " << endl;
+    for (auto it = darr.rbegin(); it != darr.rend(); ++it)
+        cout << *it << endl;
+
     cout << "Fixed arr output with iterator: " << endl;
     for (auto it = farr1.begin(); it != farr1.end(); ++it)
+        cout << *it << endl;
+
+    cout << "Fixed arr output with reversed iterator: " << endl;
+    for (auto it = farr1.rbegin(); it != farr1.rend(); ++it)
         cout << *it << endl;
 
     cout << "Fixed arr1: " << farr1 << endl;

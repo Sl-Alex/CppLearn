@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-template <typename T>
-class FixArrIterator : public std::iterator<std::forward_iterator_tag, T>
+template <typename T, bool R /* Reversed */>
+class FixArrIterator //: public std::iterator<std::forward_iterator_tag, T>
 {
     T* p;
 public:
@@ -14,7 +14,10 @@ public:
     //! Надмірна --- буде створено автоматично, наведено для повноти
     FixArrIterator(const FixArrIterator& mit) : p(mit.p) {} // Copy constructor (is implemented by default)
     FixArrIterator& operator++() {  // Prefix Increment operator
-        ++p;
+        if (!R)
+            ++p;
+        else
+            --p;
         return *this;
     }
     FixArrIterator operator++(int) // Postfix increment operator
@@ -38,8 +41,10 @@ template <typename T, size_t S>
 class FixArr
 {
     public:
-        FixArrIterator<T> begin() {return FixArrIterator<T>(mArr);}
-        FixArrIterator<T> end() {return FixArrIterator<T>(&mArr[S]);}
+        FixArrIterator<T,false> begin() {return FixArrIterator<T,false>(mArr);}
+        FixArrIterator<T,false> end() {return FixArrIterator<T,false>(&mArr[S]);}
+        FixArrIterator<T,true> rbegin() {return FixArrIterator<T,true>(&mArr[S-1]);}
+        FixArrIterator<T,true> rend() {return FixArrIterator<T,true>(mArr - 1);}
 
         FixArr() {}
         ~FixArr(){}
