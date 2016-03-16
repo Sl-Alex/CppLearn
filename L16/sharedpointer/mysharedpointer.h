@@ -11,12 +11,13 @@ template <typename T>
 class MySharedPointer
 {
 public:
-    MySharedPointer(T * obj = NULL, bool isArray = false)
-        :mObj(obj),
-        mArray(isArray)
+    typedef void (*MyDeleter)(T *);
+    MySharedPointer(T * obj = NULL, MyDeleter f = [](T* a){delete a;})
     {
-        pRefCount = new size_t;
-        *pRefCount = 1;
+        pMyPtrState = new MyPtrState;
+        pMyPtrState->obj = obj;
+        pMyPtrState->refCount = 1;
+        pMyPtrState->deleter = f;
 #ifdef PTR_DEBUG
         cout << "created" << endl;
 #endif
@@ -27,57 +28,48 @@ public:
         deletePointer();
     }
 
-    T* operator->() { return mObj; }
-    T& operator* () { return *mObj; }
+    T* operator->() { return pMyPtrState->mObj; }
+    T& operator* () { return *(pMyPtrState->mObj); }
     MySharedPointer& operator=(const MySharedPointer& obj) {
         deletePointer();
-        pRefCount = obj.pRefCount;
-        (*pRefCount)++;
+        pMyPtrState = obj.pMyPtrState;
+        pMyPtrState->refCount++;
 #ifdef PTR_DEBUG
         cout << "operator=" << endl;
-        cout << "mRefCount = " << *pRefCount << endl;
+        cout << "mRefCount = " << pMyPtrState->refCount << endl;
 #endif
-        mObj = obj.mObj;
-        mArray = obj.mArray;
         return *this;
     }
     T& operator[](size_t index){
-        return mObj[index];
+        return pMyPtrState->obj[index];
     }
 
 private:
+    struct MyPtrState{
+        T* obj;
+        size_t refCount;
+        MyDeleter deleter;
+    };
+    MyPtrState * pMyPtrState;
     void deletePointer(void)
     {
-        if (*pRefCount)
-            (*pRefCount)--;
+        if (pMyPtrState->refCount)
+            pMyPtrState->refCount--;
 
 #ifdef PTR_DEBUG
-            cout << "mRefCount-- = " << *pRefCount << endl;
+            cout << "mRefCount-- = " << pMyPtrState->refCount << endl;
 #endif
-        if ((*pRefCount) > 0)
+        if (pMyPtrState->refCount > 0)
             return;
 
-        if (mArray)
-        {
-#ifdef PTR_DEBUG
-            cout << "deleted[]" << endl;
-#endif
-            delete[] mObj;
-        }
+        if (pMyPtrState->deleter)
+            pMyPtrState->deleter(pMyPtrState->obj);
         else
-        {
-#ifdef PTR_DEBUG
-            cout << "deleted" << endl;
-#endif
-            delete mObj;
-        }
-        delete pRefCount;
-        mObj = NULL;
-    }
+            delete pMyPtrState->obj;
 
-    T * mObj;
-    bool mArray;
-    size_t * pRefCount;
+        delete pMyPtrState;
+        pMyPtrState = NULL;
+    }
 };
 
 #endif // MYSHAREDPOINTER_H

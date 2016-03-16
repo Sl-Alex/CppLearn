@@ -5,6 +5,14 @@
 
 using namespace std;
 
+struct C {
+    C()
+    { cout << "Created" << endl; }
+    ~C()
+    { cout << "Deleted " << val << endl; }
+    int val;
+};
+
 int main()
 {
     int i = 2;
@@ -12,14 +20,16 @@ int main()
     {
         cout << "\n\n";
         cout << "mPtr1\n";
-        MySharedPointer<int> mPtr1(new int[10], true);
+
+        MySharedPointer<C> mPtr1(new C[10], [](C * a){delete[] a;});
         for (int i = 0; i < 10; i++)
-            mPtr1[i] = i;
+            mPtr1[i].val = i;
+
         cout << "mPtr2\n";
-        MySharedPointer<int> mPtr2;
+        MySharedPointer<C> mPtr2;
         mPtr2 = mPtr1;
         cout << "mPtr3\n";
-        MySharedPointer<int> mPtr3;
+        MySharedPointer<C> mPtr3;
         mPtr3 = mPtr1;
     }
 }
