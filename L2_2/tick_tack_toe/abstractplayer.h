@@ -10,8 +10,6 @@ public:
 
     void setValue(Board::Value val) { mValue = val; }
     Board::Value getValue() {return mValue; }
-    Display * getDisplay(void) { return pDisplay; }
-    void setDisplay(Display * pDisp) { pDisplay = pDisp; }
     Board * getBoard(void) { return pBoard; }
     void setBoard(Board * pBrd) { pBoard = pBrd; }
 
@@ -20,7 +18,6 @@ public:
 private:
 
     Board::Value mValue = Board::VAL_EMPTY;
-    Display * pDisplay;
     Board * pBoard;
 };
 

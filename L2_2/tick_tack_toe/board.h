@@ -18,6 +18,7 @@ public:
     State getState();
 
     void setDisplay(Display * pDisp) { pDisplay = pDisp; }
+    Display * getDisplay(void) { return pDisplay; }
 
     int getSize(void) { return mSize; }
     int getFree(void) { return mFreeMoves.size(); }

@@ -27,8 +27,8 @@ bool AiPlayer::makeMove(void)
         sprintf(msg,"Computer (O) chooses cell %u,%u. Press any key to continue.",x + 1,y + 1);
 
     getBoard()->printBoard();
-    getDisplay()->printMessage(msg);
-    getDisplay()->getValue();
+    getBoard()->getDisplay()->printMessage(msg);
+    getBoard()->getDisplay()->getValue();
 
     if (getBoard()->getState() == Board::ST_ACTIVE)
         return true;

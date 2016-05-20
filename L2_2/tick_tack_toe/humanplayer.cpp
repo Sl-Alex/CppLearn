@@ -10,12 +10,12 @@ bool HumanPlayer::makeMove(void)
     int x, y;
     while(true)
     {
-        getDisplay()->printMessage("Enter x and y coordinates");
+        getBoard()->getDisplay()->printMessage("Enter x and y coordinates");
 
-        x = getDisplay()->getValue() - 1;
-        y = getDisplay()->getValue() - 1;
+        x = getBoard()->getDisplay()->getValue() - 1;
+        y = getBoard()->getDisplay()->getValue() - 1;
         if (!getBoard()->setVal(x,y,getValue()))
-            getDisplay()->printMessage("Wrong coordinates, try once again");
+            getBoard()->getDisplay()->printMessage("Wrong coordinates, try once again");
         else
             break;
     }

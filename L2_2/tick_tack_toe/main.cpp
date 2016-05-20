@@ -36,6 +36,7 @@ int main()
     AbstractPlayer * pPlayer1;
     AbstractPlayer * pPlayer2;
 
+    // Print welcome screen
     clear();
     pDisplay->setColor(7);
     mvprintw(10,25, "Welcome to the ");
@@ -49,24 +50,16 @@ int main()
     mvprintw(11,21, "the best computer game ever written");
     mvprintw(13,28, "Press any key to proceed");
     refresh();
-
     while(getch() == ERR);
 
-    clear();
-    pDisplay->setColor(11);
-    mvprintw(10,29, "Choose your player");
-    pDisplay->setColor(7);
-    mvprintw(12,27, "1. Player 1 (X)");
-    mvprintw(13,27, "2. Player 2 (O)");
-    mvprintw(14,27, "3. I just want to look");
-    refresh();
+    // Ask for play mode
+    const char * mode_list[3] = {"1. Player 1 (X)",
+                 "2. Player 2 (O)",
+                 "3. I just want to look"};
 
-    int mode = 0;
-    while ((mode < 1) || (mode > 3))
-    {
-        mode = getch() - '0';
-    }
+    int mode = pDisplay->ask("Choose your player", mode_list,3,1);
 
+    // Initialize players
     switch(mode)
     {
         case 1:
@@ -86,25 +79,13 @@ int main()
     pPlayer1->setValue(Board::VAL_X);
     pPlayer2->setValue(Board::VAL_O);
 
-    pPlayer1->setDisplay(pDisplay);
-    pPlayer2->setDisplay(pDisplay);
+    // Get board size
+    int size = pDisplay->ask("Enter board size (3 - 9)",0,7,3);
 
-    clear();
-    pDisplay->setColor(11);
-    mvprintw(10,29, "Enter board size (3 - 9)");
-    pDisplay->setColor(7);
-    mvprintw(12,27, "Default is 3");
-    refresh();
-
-    int size = 3;
-    int sz = ERR;
-    while (sz == ERR)
-    {
-        sz = getch();
-    }
-    sz = sz - '0';
-    if ((sz >= 3 ) && (sz <= 9))
-        size = sz;
+    // Get win limit
+    int limit = size;
+    if (size > 3)
+        limit = pDisplay->ask("Enter win limit (3 to board size)", 0, size - 3 + 1, 3);
 
     clear();
     pDisplay->setColor(2);
@@ -135,7 +116,7 @@ int main()
 
     srand(time(0));
 
-    Board * pBrd = new Board(size,size);
+    Board * pBrd = new Board(size,limit);
     pBrd->setDisplay(pDisplay);
 
     pPlayer1->setBoard(pBrd);

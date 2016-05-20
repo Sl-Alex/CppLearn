@@ -47,3 +47,33 @@ int Display::getValue(void)
     }
     return sz - '0';
 }
+
+int Display::ask(const char * message, const char ** options, int numOptions, int start)
+{
+    clear();
+    setColor(11);
+    mvprintw(8,29, message);
+    setColor(7);
+    if (options == 0)
+    {
+        mvprintw(10,27, "Range from ");
+        addch('0' + start);
+        printw(" to ");
+        addch('0' + start + numOptions - 1);
+    }
+    else
+    {
+        for (int i = 0; i < numOptions; i++)
+        {
+            mvprintw(10 + i,27, options[i]);
+        }
+    }
+    refresh();
+
+    int res = start - 1;
+    while ((res < start) || (res > start + numOptions - 1))
+    {
+        res = getch() - '0';
+    }
+    return res;
+}

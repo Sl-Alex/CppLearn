@@ -80,33 +80,28 @@ void Board::updateState(int x, int y)
 
     int curLevel;
 
-    x1 = x - mLevel - 1;
+    x1 = x - mLevel + 1;
     x2 = x + mLevel - 1;
-    y1 = y - mLevel - 1;
+    y1 = y - mLevel + 1;
     y2 = y + mLevel - 1;
 
-    if (x1 < 0) x1 = 0;
-    if (y1 < 0) y1 = 0;
-    if (x2 >= mSize) x2 = mSize - 1;
-    if (y2 >= mSize) y2 = mSize - 1;
-
-    Value * pVal;
+    Value val;
     curLevel = 0;
     Value val_old = VAL_EMPTY;
 
     // Check "-" line
     for (int _x = x1; _x <= x2; _x++)
     {
-        pVal = &pData[_x*mSize+y];
-        if (*pVal != val_old)
+        val = getVal(_x,y);
+        if (val != val_old)
             curLevel = 0;
 
-        if (*pVal != VAL_EMPTY)
+        if (val != VAL_EMPTY)
         {
             curLevel++;
             if (curLevel >= mLevel)
             {
-                if (*pVal == VAL_X)
+                if (val == VAL_X)
                     mState = ST_WIN_X;
                 else
                     mState = ST_WIN_O;
@@ -114,22 +109,22 @@ void Board::updateState(int x, int y)
             }
         }
 
-        val_old = *pVal;
+        val_old = val;
     }
     val_old = VAL_EMPTY;
     // Check "|" line
     for (int _y = y1; _y <= y2; _y++)
     {
-        pVal = &pData[x*mSize+_y];
-        if (*pVal != val_old)
+        val = getVal(x,_y);
+        if (val != val_old)
             curLevel = 0;
 
-        if (*pVal != VAL_EMPTY)
+        if (val != VAL_EMPTY)
         {
             curLevel++;
             if (curLevel >= mLevel)
             {
-                if (*pVal == VAL_X)
+                if (val == VAL_X)
                     mState = ST_WIN_X;
                 else
                     mState = ST_WIN_O;
@@ -137,22 +132,22 @@ void Board::updateState(int x, int y)
             }
         }
 
-        val_old = *pVal;
+        val_old = val;
     }
     val_old = VAL_EMPTY;
     // Check "\" line
-    for (int _x = x1; _x <= x2; _x++)
+    for (int _x = x1, _y = y1; _x <= x2; _x++, _y++)
     {
-        pVal = &pData[_x*mSize+y1+_x-x1];
-        if (*pVal != val_old)
+        val = getVal(_x, _y);
+        if (val != val_old)
             curLevel = 0;
 
-        if (*pVal != VAL_EMPTY)
+        if (val != VAL_EMPTY)
         {
             curLevel++;
             if (curLevel >= mLevel)
             {
-                if (*pVal == VAL_X)
+                if (val == VAL_X)
                     mState = ST_WIN_X;
                 else
                     mState = ST_WIN_O;
@@ -160,29 +155,29 @@ void Board::updateState(int x, int y)
             }
         }
 
-        val_old = *pVal;
+        val_old = val;
     }
     val_old = VAL_EMPTY;
     // Check "/" line
-    for (int _x = x1; _x <= x2; _x++)
+    for (int _x = x1, _y = y2; _x <= x2; _x++, _y--)
     {
-        pVal = &pData[_x*mSize+y2-_x+x1];
-        if (*pVal != val_old)
+        val = getVal(_x, _y);
+        if (val != val_old)
             curLevel = 0;
 
-        if (*pVal != VAL_EMPTY)
+        if (val != VAL_EMPTY)
         {
             curLevel++;
             if (curLevel >= mLevel)
             {
-                if (*pVal == VAL_X)
+                if (val == VAL_X)
                     mState = ST_WIN_X;
                 else
                     mState = ST_WIN_O;
                 return;
             }
         }
-        val_old = *pVal;
+        val_old = val;
     }
 }
 
