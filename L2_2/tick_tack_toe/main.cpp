@@ -161,6 +161,8 @@ int main()
             pDisplay->printMessage("\"O\" computer won");
     }
 
+    pDisplay->getValue();
+
     return 0;
     delete pBrd;
 }
