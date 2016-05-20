@@ -22,9 +22,9 @@ bool AiPlayer::makeMove(void)
 
     char msg[100];
     if (getValue() == Board::VAL_X)
-        sprintf(msg,"Computer (X) chooses cell %u,%u. Press any key to continue.",x,y);
+        sprintf(msg,"Computer (X) chooses cell %u,%u. Press any key to continue.",x + 1,y + 1);
     else
-        sprintf(msg,"Computer (O) chooses cell %u,%u. Press any key to continue.",x,y);
+        sprintf(msg,"Computer (O) chooses cell %u,%u. Press any key to continue.",x + 1,y + 1);
 
     getBoard()->printBoard();
     getDisplay()->printMessage(msg);
