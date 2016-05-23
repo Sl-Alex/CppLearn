@@ -1,7 +1,7 @@
 #ifndef BOOK_H
 #define BOOK_H
 
-#include <string>
+#include <QString>
 #include <vector>
 
 class Book
@@ -9,13 +9,13 @@ class Book
 public:
     Book();
 
-    std::string id;
-    std::vector<std::string> authors;
-    std::string title;
-    std::string publisher;
+    QString id;
+    std::vector<QString> authors;
+    QString title;
+    QString publisher;
     int year;
     int code;
-    std::string borrowed;
+    QString borrowed;
 
     void clear(void);
 private:

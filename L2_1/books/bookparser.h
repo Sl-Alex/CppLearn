@@ -1,12 +1,13 @@
 #ifndef BOOKPARSER_H
 #define BOOKPARSER_H
 
+#include <QString>
 #include "book.h"
 
 class BookParser
 {
 public:
-    static bool parseLine(std::string line, Book * book);
+    static bool parseLine(QString line, Book * book);
 
     static inline BookParser * getInstance()
     {
