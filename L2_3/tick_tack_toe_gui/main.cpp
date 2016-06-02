@@ -2,7 +2,6 @@
 #include <iostream>
 #include <time.h>
 #include "boardmodel.h"
-#include "display.h"
 #include "mainwindow.h"
 #include "abstractplayer.h"
 #include "aiplayer.h"

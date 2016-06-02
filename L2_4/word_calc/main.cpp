@@ -1,0 +1,89 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string.h>
+
+#include "wordcounter.h"
+#include "totalcounter.h"
+
+void usage(void)
+{
+    std::cout << "Usage: word_calc filename" << std::endl;
+    std::cout << "  filename - input file name" << std::endl;
+}
+
+void string_split(std::string from, std::vector<std::string> &to, std::string delimiters)
+{
+    to.clear();
+
+    size_t posBegin = 0;
+    size_t posEnd = 0;
+    std::string word;
+
+    while (true)
+    {
+        posBegin = from.find_first_not_of(delimiters,posEnd);
+        if (posBegin == std::string::npos) return;
+
+        posEnd = from.find_first_of(delimiters,posBegin);
+        if (posEnd == std::string::npos)
+        {
+            word = from.substr(posBegin, from.length() - posBegin);
+        }
+        else
+        {
+            word = from.substr(posBegin, posEnd - posBegin);
+        }
+
+        to.push_back(word);
+
+        std::cout << "#" << word << "#";
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    WordCounter wc;
+    TotalCounter tc;
+
+    if (argc != 2)
+    {
+        std::cout << "Wrong number of arguments" << std::endl;
+        usage();
+        return EINVAL;
+    }
+
+    std::string fileName = argv[1];
+
+    std::ifstream wordFile(fileName, std::ios::in|std::ios::binary);
+    if (!wordFile.is_open())
+    {
+        std::cout << "Can't open file" << std::endl;
+        return EIO;
+    }
+
+    std::string line;
+    std::vector<std::string> lineWords;
+    while(std::getline(wordFile,line))
+    {
+        string_split(line, lineWords, " \x09\x0D\x0A");
+        for (auto word = lineWords.begin(); word != lineWords.end(); ++word)
+        {
+            wc.addWord(*word);
+            tc.add(1);
+        }
+        std::cout << std::endl;
+    }
+
+    wordFile.close();
+
+    std::cout << "Result - " << tc.count() << " word(s) :" << std::endl;
+
+    for (auto it = wc.begin(); it != wc.end(); ++it)
+    {
+        std::cout << "W" << "  #" << it->first << "# " << it->second << std::endl;
+    }
+
+    return EXIT_SUCCESS;
+}
+

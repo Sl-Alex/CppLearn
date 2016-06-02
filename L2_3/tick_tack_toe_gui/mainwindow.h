@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTimer>
 #include "boardmodel.h"
 #include "abstractplayer.h"
 
@@ -26,6 +27,8 @@ private slots:
 
     void on_tableView_activated(const QModelIndex &index);
 
+    void onTimerEvent();
+
 private:
     Ui::MainWindow *ui;
     BoardModel * pBoard;
@@ -33,6 +36,7 @@ private:
     AbstractPlayer * pPlayer2;
     AbstractPlayer * pCurPlayer;
     BoardModel::State oldState;
+    QTimer * pTimer;
 };
 
 #endif // MAINWINDOW_H

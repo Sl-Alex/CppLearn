@@ -2,7 +2,6 @@
 #define ABSTRACTPLAYER_H
 
 #include "boardmodel.h"
-#include "display.h"
 
 class AbstractPlayer
 {

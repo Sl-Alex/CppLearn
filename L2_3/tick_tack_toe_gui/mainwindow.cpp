@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     pBoard = NULL;
     pPlayer1 = NULL;
     pPlayer2 = NULL;
+    pTimer = new QTimer(this);
+    connect(pTimer, SIGNAL(timeout()), this, SLOT(onTimerEvent()));
 }
 
 MainWindow::~MainWindow()
@@ -57,11 +59,14 @@ void MainWindow::on_pushButton_clicked()
     pCurPlayer = pPlayer1;
     ui->statusLabel->setText("Ready to play");
     oldState = BoardModel::ST_ACTIVE;
+
+    pTimer->start(1000);
 }
 
 // Click or "Enter" on the cell
 void MainWindow::on_tableView_pressed(const QModelIndex &index)
 {
+    pTimer->stop();
     if (pCurPlayer->makeMove(index.column(),index.row()))
     {
         ui->tableView->repaint();
@@ -73,10 +78,19 @@ void MainWindow::on_tableView_pressed(const QModelIndex &index)
                 pCurPlayer = pPlayer1;
         }
     }
-    if (pBoard->getState() == oldState) return;
+    if (pBoard->getState() == BoardModel::ST_ACTIVE)
+    {
+        pTimer->start();
+    }
+
+    if (pBoard->getState() == oldState)
+        return;
+
     oldState = pBoard->getState();
 
-    if (oldState == BoardModel::ST_ACTIVE) return;
+    if (oldState == BoardModel::ST_ACTIVE)
+        return;
+
 
     switch (oldState)
     {
@@ -97,4 +111,12 @@ void MainWindow::on_tableView_pressed(const QModelIndex &index)
 void MainWindow::on_tableView_activated(const QModelIndex &index)
 {
     on_tableView_pressed(index);
+}
+
+void MainWindow::onTimerEvent()
+{
+    if (dynamic_cast<AiPlayer *>(pCurPlayer) != NULL)
+    {
+        on_tableView_pressed(QModelIndex());
+    }
 }

@@ -11,12 +11,13 @@ public:
     enum State {ST_ACTIVE = 0, ST_WIN_X, ST_WIN_O, ST_WIN_NONE};
 
     BoardModel(int size = 3, int level = 3);
-    ~BoardModel();
+    ~BoardModel() {}
 
     int getSize(void) { return mSize; }
     int getFree(void) { return mFreeMoves.size(); }
     int getFreeIdx(int num) { return mFreeMoves.at(num); }
     bool setVal(int x, int y, Value val);
+    Value getVal(int x, int y) const;
     State getState(){ return mState; }
 
     // QAbstractItemModel interface
@@ -33,8 +34,7 @@ private:
     int mLevel;
     State mState;
     std::vector<int> mFreeMoves;
-
-    Value * pData;
+    std::vector<Value> mBoard;
 };
 
 #endif // BOARDMODEL_H
