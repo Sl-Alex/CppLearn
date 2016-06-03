@@ -35,86 +35,94 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Edit properties</string>
-      </property>
-      <layout class="QFormLayout" name="formLayout">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>ID</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="idEdit"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Authors</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="authorsEdit"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Title</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Publisher</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Year</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Code</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Borrowed</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="titleEdit"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="publisherEdit"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="yearEdit"/>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLineEdit" name="codeEdit"/>
-       </item>
-       <item row="7" column="1">
-        <widget class="QLineEdit" name="borrowedEdit"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Edit properties</string>
+        </property>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>ID</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="idEdit"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Authors</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="authorsEdit"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Title</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Publisher</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Year</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Code</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Borrowed</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="titleEdit"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="publisherEdit"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="yearEdit"/>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="codeEdit"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="borrowedEdit"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Export to SQLite...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
