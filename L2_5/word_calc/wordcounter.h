@@ -2,12 +2,11 @@
 #define WORDCOUNTER_H
 
 #include <map>
-#include <tr1/unordered_map>
 
 class WordCounter
 {
 private:
-    std::tr1::unordered_map<std::string, int> mMap;
+    std::map<std::string, int> mMap;
 
 public:
 

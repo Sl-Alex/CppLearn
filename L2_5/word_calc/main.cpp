@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <string.h>
 #include <thread>
@@ -99,10 +100,19 @@ int main(int argc, char *argv[])
 
     std::cout << "Result - " << tc.count() << " word(s) :" << std::endl;
 
+    std::ofstream outfile("result.txt", std::ios::out|std::ios::binary|std::ios::trunc);
+
     for (auto it = wc.begin(); it != wc.end(); ++it)
     {
-        std::cout << "W" << "  #" << it->first << "# " << it->second << std::endl;
+        std::stringstream line;
+
+        line << "(" << it->first << ") (" << it->second << ")" << std::endl;
+
+        const std::string tmp = line.str();
+
+        outfile.write(tmp.c_str(),tmp.length());
     }
+    outfile.close();
 
     return EXIT_SUCCESS;
 }
