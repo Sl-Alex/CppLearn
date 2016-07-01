@@ -27,11 +27,11 @@ std::atomic<bool> readerDone(false);
 size_t readerTimeStart = 0;
 size_t readerTimeEnd = 0;
 size_t parserTimeStart = 0;
-size_t parserTimeEnd = 0;
+std::atomic<size_t> parserTimeEnd(0);
 size_t totalTimeStart = 0;
 size_t totalTimeEnd = 0;
 
-char * fileBuffer;
+char * fileBuffer = 0;
 
 std::ifstream::pos_type filesize(std::string filename)
 {
@@ -39,6 +39,8 @@ std::ifstream::pos_type filesize(std::string filename)
     return in.tellg();
 }
 
+char * findFirstEmpty(char * data, char * end);
+char * findFirstNotEmpty(char * data, char * end);
 char * findLastEmpty(char * data, char * end);
 
 void reader(std::string fileName, int bufferSize)
