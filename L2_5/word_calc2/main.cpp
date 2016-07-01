@@ -21,7 +21,8 @@ typedef struct {
 
 std::map<std::string, int> wordMap;
 std::vector<tBuffer> rawData;
-std::mutex dataMutex;
+std::mutex queueMutex;
+std::mutex mapMutex;
 std::atomic<bool> readerDone(false);
 size_t readerTimeStart = 0;
 size_t readerTimeEnd = 0;
@@ -30,9 +31,30 @@ size_t parserTimeEnd = 0;
 size_t totalTimeStart = 0;
 size_t totalTimeEnd = 0;
 
+char * fileBuffer;
+
+std::ifstream::pos_type filesize(std::string filename)
+{
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return in.tellg();
+}
+
+char * findLastEmpty(char * data, char * end);
+
 void reader(std::string fileName, int bufferSize)
 {
     readerTimeStart = clock();
+
+    auto fSize = filesize(fileName);
+    if (fSize == std::string::npos)
+    {
+        std::cout << "Wrong file size" << std::endl;
+        readerDone = true;
+        return;
+    }
+
+    fileBuffer = new char[fSize];
+
     std::ifstream wordFile(fileName, std::ios::in|std::ios::binary);
     if (!wordFile.is_open())
     {
@@ -41,35 +63,45 @@ void reader(std::string fileName, int bufferSize)
         return;
     }
 
+    char * begin = fileBuffer;
+    char * end = fileBuffer;
+
+    char * cur = fileBuffer;
+
     while (true)
     {
         tBuffer buf;
 
-        char * buffer = new char[bufferSize];
-        buf.begin = buffer;
-        if (!wordFile.read(buffer, bufferSize))
+        if (!wordFile.read(cur, bufferSize))
         {
+            buf.begin = begin;
             buf.size = wordFile.gcount();
 
             // Add remaining data to the vector
-            dataMutex.lock();
+            std::lock_guard<std::mutex> lock(queueMutex);
             rawData.push_back(buf);
-            dataMutex.unlock();
 
             break;
         }
+        cur += bufferSize;
 
-        buf.size = bufferSize;
+        end = findLastEmpty(begin, cur);
+        if (end)
+        {
+            buf.begin = begin;
+            buf.size = end - begin;
 
-        // Add block to the vector
-        dataMutex.lock();
-        rawData.push_back(buf);
-        dataMutex.unlock();
+            begin = end;
+
+            // Add block to the vector
+            std::lock_guard<std::mutex> lock(queueMutex);
+            rawData.push_back(buf);
+        }
     }
-
 
     // Done
     wordFile.close();
+
     readerDone = true;
     readerTimeEnd = clock();
 }
@@ -104,60 +136,53 @@ char * findFirstNotEmpty(char * data, char * end)
     return 0;
 }
 
+char * findLastEmpty(char * data, char * end)
+{
+    while (end != data)
+    {
+        if ((*end == ' ') ||
+            (*end == '\n') ||
+            (*end == '\r') ||
+            (*end == '\t'))
+        return end;
+
+        end--;
+    }
+    return 0;
+}
+
 void parser(void)
 {
-    parserTimeStart = clock();
-    std::string remainder;
+//    parserTimeStart = clock();
 
     while(true)
     {
+        tBuffer buf;
+
         // Get buffer pointers
-        dataMutex.lock();
-        if (rawData.size() == 0)
+        size_t blocksCount = 0;
         {
-            if (readerDone)
+            std::lock_guard<std::mutex> lock(queueMutex);
+            blocksCount = rawData.size();
+            if (blocksCount > 0)
             {
-                dataMutex.unlock();
-                break;
+                buf = rawData.at(0);
+                rawData.erase(rawData.begin());
             }
-            dataMutex.unlock();
-            std::this_thread::yield();
-            continue;
         }
-        tBuffer buf = rawData.at(0);
-        rawData.erase(rawData.begin());
-        dataMutex.unlock();
+        if (blocksCount == 0)
+        {
+            if (readerDone == false)
+            {
+                std::this_thread::yield();
+                continue;
+            }
+            break;
+        }
 
         // Parse buffer
         char * pBegin = buf.begin;
         char * pEnd = buf.begin;
-
-        if (!remainder.empty())
-        {
-            pBegin = findFirstNotEmpty(pBegin, buf.begin + buf.size);
-            if (pBegin == buf.begin)
-            {
-                std::string second_part;
-                pEnd = findFirstEmpty(pBegin, buf.begin + buf.size);
-                if (pEnd)
-                {
-                    second_part = std::string(pBegin,pEnd);
-                    remainder += second_part;
-                    ++wordMap[remainder];
-                    remainder.clear();
-                }
-                else
-                {
-                    second_part = std::string(pBegin,buf.begin + buf.size);
-                    remainder += second_part;
-                }
-            }
-            else
-            {
-                ++wordMap[remainder];
-                remainder.clear();
-            }
-        }
 
         while (true)
         {
@@ -171,19 +196,18 @@ void parser(void)
             pEnd = findFirstEmpty(pBegin, buf.begin + buf.size);
             if (pEnd == 0)
             {
-                // Last word without end delimiter
-                remainder = std::string(pBegin, buf.begin + buf.size);
+                std::string word = std::string(pBegin, buf.begin + buf.size);
+                std::lock_guard<std::mutex> lock(mapMutex);
+                ++wordMap[word];
                 break;
             }
             else
             {
                 std::string word = std::string(pBegin, pEnd);
+                std::lock_guard<std::mutex> lock(mapMutex);
                 ++wordMap[word];
             }
         }
-
-        // Release buffer
-        delete[] buf.begin;
     }
     parserTimeEnd = clock();
 }
@@ -203,12 +227,18 @@ int main(int argc, char *argv[])
 
     std::cout << "Processing..." << std::endl;
 
+    fileBuffer = 0;
+
     totalTimeStart = clock();
     std::thread thread1 = std::thread(&reader, fileName, 1024);
+    parserTimeStart = clock();
     std::thread thread2 = std::thread(&parser);
 
     thread1.join();
     thread2.join();
+
+    if (fileBuffer)
+        delete[] fileBuffer;
 
     totalTimeEnd = clock();
 
