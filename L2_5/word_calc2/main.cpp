@@ -19,8 +19,10 @@ typedef struct {
     size_t size;
 } tBuffer;
 
-std::map<std::string, int> wordMap;
+using tWordMap = std::map<std::string, int>;
+tWordMap wordMap;
 std::vector<tBuffer> rawData;
+std::vector<tWordMap*> parsersMaps;
 std::mutex queueMutex;
 std::mutex mapMutex;
 std::atomic<bool> readerDone(false);
@@ -153,7 +155,7 @@ char * findLastEmpty(char * data, char * end)
     return 0;
 }
 
-void parser(void)
+void parser(tWordMap threadMap)
 {
 //    parserTimeStart = clock();
 
@@ -164,19 +166,23 @@ void parser(void)
         // Get buffer pointers
         size_t blocksCount = 0;
         {
-            std::lock_guard<std::mutex> lock(queueMutex);
+            queueMutex.lock();
+            //std::lock_guard<std::mutex> lock(queueMutex);
             blocksCount = rawData.size();
             if (blocksCount > 0)
             {
-                buf = rawData.at(0);
-                rawData.erase(rawData.begin());
+                buf = rawData.back();
+                rawData.pop_back();
+//                buf = rawData.at(0);
+//                rawData.erase(rawData.begin());
             }
+            queueMutex.unlock();
         }
         if (blocksCount == 0)
         {
             if (readerDone == false)
             {
-                std::this_thread::yield();
+                //std::this_thread::yield();
                 continue;
             }
             break;
@@ -198,16 +204,16 @@ void parser(void)
             pEnd = findFirstEmpty(pBegin, buf.begin + buf.size);
             if (pEnd == 0)
             {
-                std::string word = std::string(pBegin, buf.begin + buf.size);
-                std::lock_guard<std::mutex> lock(mapMutex);
-                ++wordMap[word];
+                //mapMutex.lock();
+                ++threadMap[std::string(pBegin, buf.begin + buf.size)];
+                //mapMutex.unlock();
                 break;
             }
             else
             {
-                std::string word = std::string(pBegin, pEnd);
-                std::lock_guard<std::mutex> lock(mapMutex);
-                ++wordMap[word];
+                //mapMutex.lock();
+                ++threadMap[std::string(pBegin, pEnd)];
+                //mapMutex.unlock();
             }
         }
     }
@@ -218,26 +224,58 @@ void parser(void)
 int main(int argc, char *argv[])
 {
 
-    if (argc != 2)
+    if ((argc < 2) || (argc > 3))
     {
         std::cout << "Wrong number of arguments" << std::endl;
         usage();
         return EINVAL;
     }
 
+    int threadsCount = 4;
+    if (argc == 3)
+    {
+        std::string threadsStr = argv[2];
+        threadsCount = std::stoi(threadsStr);
+        std::cout << threadsCount << " thread(s) were selected" << std:: endl;
+    }
+    else
+    {
+        std::cout << "By default " << threadsCount << " thread(s) are used" << std::endl;
+    }
+
     std::string fileName = argv[1];
 
     std::cout << "Processing..." << std::endl;
 
+    std::vector<std::thread> processingPool;
+
     fileBuffer = 0;
 
     totalTimeStart = clock();
-    std::thread thread1 = std::thread(&reader, fileName, 1024);
+    // Start file processing thread
+    std::thread fileThread = std::thread(&reader, fileName, 1024);
+    // Start parser threads
     parserTimeStart = clock();
-    std::thread thread2 = std::thread(&parser);
+    for (int i = 0; i < threadsCount; i++)
+    {
+        tWordMap *myMap = new tWordMap();
+        parsersMaps.push_back(myMap);
+        processingPool.emplace_back(std::thread(&parser,*myMap));
+    }
 
-    thread1.join();
-    thread2.join();
+    // Join file processing thread (it will definitely be first)
+    fileThread.join();
+
+    for (auto it = processingPool.begin(); it != processingPool.end(); ++it)
+    {
+        it->join();
+        tWordMap *myMap = parsersMaps.at(0);
+        for (auto itMap = myMap->begin(); itMap != myMap->end(); itMap++)
+        {
+            wordMap[itMap->first] += itMap->second;
+        }
+        parsersMaps.erase(parsersMaps.begin());
+    }
 
     if (fileBuffer)
         delete[] fileBuffer;
