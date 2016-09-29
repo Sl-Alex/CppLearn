@@ -1,0 +1,29 @@
+#ifndef CHATSERVER_H
+#define CHATSERVER_H
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include "windows.h"
+#include <thread>
+#include <atomic>
+
+class ChatServer
+{
+public:
+    ChatServer();
+    bool init(void);
+    bool start(void);
+    void stop(void);
+    in_addr getSelfAddress(void) { return selfAddr; }
+    ~ChatServer();
+private:
+    struct in_addr selfAddr;
+    struct addrinfo *ownAddr;
+    SOCKET ListenSocket;
+    std::atomic_bool mStop;
+    std::atomic_bool mRunning;
+
+    std::thread serverThread;
+};
+
+#endif // CHATSERVER_H
