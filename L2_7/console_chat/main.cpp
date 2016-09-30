@@ -9,6 +9,7 @@
 
 #define LISTEN_PORT 20000
 
+/*
 void setColor(int col)
 {
     if (col > 15)
@@ -21,6 +22,7 @@ void setColor(int col)
         attron(COLOR_PAIR(col - 7) | A_BOLD);
     }
 }
+*/
 
 int main(int argc, char *argv[])
 {

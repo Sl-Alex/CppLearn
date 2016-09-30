@@ -7,6 +7,8 @@
 #include <thread>
 #include <atomic>
 
+#include "connectionmanager.h"
+
 class ChatServer
 {
 public:
@@ -24,6 +26,8 @@ private:
     std::atomic_bool mRunning;
 
     std::thread serverThread;
+
+    ConnectionManager manager;
 };
 
 #endif // CHATSERVER_H

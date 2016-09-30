@@ -5,10 +5,8 @@
 #include <iostream>
 #include "chatconnection.h"
 
-void serverTask(SOCKET listenSocket, std::atomic_bool &stop, std::atomic_bool &running)
+void serverTask(SOCKET listenSocket, std::atomic_bool &stop, std::atomic_bool &running, ConnectionManager &manager)
 {
-    std::vector<ChatConnection*> connections;
-
     int err = 0;
     int iResult = 0;
 
@@ -46,29 +44,13 @@ void serverTask(SOCKET listenSocket, std::atomic_bool &stop, std::atomic_bool &r
         }
 
         ChatConnection * newConnection = new ChatConnection();
-        connections.emplace_back(newConnection);
         newConnection->start(newClientSocket);
-        auto it = connections.begin();
-        while (it != connections.end())
-        {
-            // Erase only "non-running" iterators
-            if ((*it)->isRunning() == false)
-            {
-                delete *it;
-                connections.erase(it);
-
-            }
-            else
-                it++;
-        }
+        manager.addConnection(newConnection);
+        manager.cleanup();
     }
 
-    auto it = connections.begin();
-    while (it != connections.end())
-    {
-        delete *it;
-        connections.erase(it);
-    }
+    // Got a stop request, stop all connections
+    manager.clear();
 
     // No longer need server socket
     closesocket(listenSocket);
@@ -159,7 +141,7 @@ bool ChatServer::start(void)
 
     mRunning = true;
     mStop = false;
-    serverThread = std::thread(serverTask, ListenSocket, std::ref(mStop), std::ref(mRunning));
+    serverThread = std::thread(serverTask, ListenSocket, std::ref(mStop), std::ref(mRunning), std::ref(manager));
 
     return true;
 }
