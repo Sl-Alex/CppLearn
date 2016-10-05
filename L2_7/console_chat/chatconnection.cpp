@@ -1,6 +1,7 @@
 #include "chatconnection.h"
 
-static void connectionTask(SOCKET taskSocket, std::atomic_bool &stop, std::atomic_bool &running)
+static void connectionTask(SOCKET taskSocket, std::atomic_bool &stop, std::atomic_bool &running,
+                           StringQueue &receiveQueue, StringQueue &sendQueue)
 {
     char recvbuf[512];
     int recvbuflen = 512;
@@ -13,6 +14,22 @@ static void connectionTask(SOCKET taskSocket, std::atomic_bool &stop, std::atomi
     {
         int err = 0;
 
+        if (!sendQueue.empty())
+        {
+            std::string data = sendQueue.pop();
+
+            int iSendResult;
+            iSendResult = send(taskSocket, data.c_str(), data.length(), 0 );
+            if (iSendResult == SOCKET_ERROR)
+            {
+                err = WSAGetLastError();
+                printf("send failed with error: %d\n", err);
+                isAlive = false;
+                continue;
+            }
+            printf("Bytes sent: %d\n", iSendResult);
+        }
+
         iResult = recv(taskSocket, recvbuf, recvbuflen, 0);
         err = WSAGetLastError();
         if (err == WSAEWOULDBLOCK)
@@ -24,19 +41,8 @@ static void connectionTask(SOCKET taskSocket, std::atomic_bool &stop, std::atomi
 
         if (iResult > 0)
         {
+            receiveQueue.push(std::string(recvbuf));
             printf("Bytes received: %d\n", iResult);
-
-            // Echo the buffer back to the sender
-            int iSendResult;
-            iSendResult = send(taskSocket, recvbuf, iResult, 0 );
-            if (iSendResult == SOCKET_ERROR)
-            {
-                err = WSAGetLastError();
-                printf("send failed with error: %d\n", err);
-                isAlive = false;
-                continue;
-            }
-            printf("Bytes sent: %d\n", iSendResult);
         }
         else if (iResult == 0)
         {
@@ -84,7 +90,8 @@ void ChatConnection::start(SOCKET newSocket)
     mRunning = true;
     mStop = false;
 
-    mThread = std::thread(connectionTask,mSocket,std::ref(mStop), std::ref(mRunning));
+    mThread = std::thread(connectionTask,mSocket,std::ref(mStop), std::ref(mRunning),
+                          std::ref(mReceiveQueue), std::ref(mSendQueue));
 }
 
 void ChatConnection::stop(void)
@@ -96,4 +103,9 @@ void ChatConnection::stop(void)
     mStop = false;
     mRunning = false;
     mSocket = INVALID_SOCKET;
+}
+
+void ChatConnection::sendMessage(std::string data)
+{
+    mSendQueue.push(data);
 }

@@ -17,6 +17,8 @@ public:
     bool start(void);
     void stop(void);
     in_addr getSelfAddress(void) { return selfAddr; }
+    void connectTo(std::string address);
+    void broadcast(std::string data);
     ~ChatServer();
 private:
     struct in_addr selfAddr;

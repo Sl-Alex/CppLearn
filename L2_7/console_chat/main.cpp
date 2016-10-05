@@ -3,13 +3,10 @@
 #include <string>
 #include "win_curses.h"
 
-#include <winsock2.h>
-#include "windows.h"
 #include "chatserver.h"
 
 #define LISTEN_PORT 20000
 
-/*
 void setColor(int col)
 {
     if (col > 15)
@@ -22,16 +19,10 @@ void setColor(int col)
         attron(COLOR_PAIR(col - 7) | A_BOLD);
     }
 }
-*/
 
 int main(int argc, char *argv[])
 {
     ChatServer server;
-    WSAData wsaData;
-
-    if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0) {
-        return 255;
-    }
 
     std::cout << "Simple console chat. Allows any incoming connection, one connection per IP." << std::endl;
     std::cout << "Connection can be initiated either by you or by remote IP." << std::endl;
@@ -42,17 +33,8 @@ int main(int argc, char *argv[])
 
     server.init();
     server.start();
-    volatile bool test = true;
-    //Sleep(10000);
-    while(test)
-    {
+    server.connectTo("127.0.0.1");
 
-    }
-    server.stop();
-
-    WSACleanup();
-    return 0;
-#if 0
     initscr();
     nodelay(stdscr,true);
     keypad(stdscr, TRUE);
@@ -67,7 +49,21 @@ int main(int argc, char *argv[])
     mvprintw(23, 17, "TEST");
     refresh();
 
-    WSACleanup();
+    char key;
+    do
+    {
+        key = getch();
+        if (key == 'b')
+        {
+            server.broadcast("TEST");
+        }
+    } while (key != 0x1B);
+
+    server.stop();
+
+    mvprintw(1, 1, "Done");
+
+    refresh();
+
     return 0;
-#endif
 }

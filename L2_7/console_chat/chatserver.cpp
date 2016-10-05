@@ -60,16 +60,23 @@ void serverTask(SOCKET listenSocket, std::atomic_bool &stop, std::atomic_bool &r
 
 ChatServer::ChatServer()
 {
+    WSAData wsaData;
+
+    if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0) {
+        std::cout << "WSAStartup failure" << std::endl;
+    }
+
     // Default address is empty
     selfAddr.s_addr = 0;
     ListenSocket = INVALID_SOCKET;
-    mStop = false;
+    mStop = true;
     mRunning = false;
 }
 
 ChatServer::~ChatServer()
 {
     stop();
+    WSACleanup();
 }
 
 bool ChatServer::init(void)
@@ -155,4 +162,70 @@ void ChatServer::stop(void)
     mRunning = false;
 
     mStop = false;
+}
+
+void ChatServer::connectTo(std::string address)
+{
+    struct addrinfo hints,
+            *result = NULL;
+
+    int iResult;
+
+    // set address info
+    ZeroMemory( &hints, sizeof(hints) );
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;  //TCP connection!!!
+
+    //resolve server address and port
+    iResult = getaddrinfo(address.c_str(), "20001", &hints, &result);
+
+    if( iResult != 0 )
+    {
+        printf("getaddrinfo failed with error: %d\n", iResult);
+        WSACleanup();
+        return;
+    }
+
+    // socket for client to connect to server
+    SOCKET ConnectSocket;
+
+    // Create a SOCKET for connecting to server
+    ConnectSocket = socket(result->ai_family, result->ai_socktype,
+         result->ai_protocol);
+
+    if (ConnectSocket == INVALID_SOCKET) {
+        printf("socket failed with error: %d\n", WSAGetLastError());
+        WSACleanup();
+        exit(1);
+    }
+
+    // Connect to server.
+    iResult = connect( ConnectSocket, result->ai_addr, (int)result->ai_addrlen);
+
+    if (iResult == SOCKET_ERROR)
+    {
+        closesocket(ConnectSocket);
+        ConnectSocket = INVALID_SOCKET;
+        printf ("The server is down... did not connect");
+    }
+
+    // no longer need address info for server
+    freeaddrinfo(result);
+
+    u_long mode = 1;
+    ioctlsocket(ConnectSocket, FIONBIO, &mode);
+
+    ChatConnection * newConnection = new ChatConnection();
+    newConnection->start(ConnectSocket);
+    manager.addConnection(newConnection);
+    manager.cleanup();
+}
+
+void ChatServer::broadcast(std::string data)
+{
+    for (int i = 0; i < manager.getCount(); i++)
+    {
+        manager.sendTo(i,data);
+    }
 }

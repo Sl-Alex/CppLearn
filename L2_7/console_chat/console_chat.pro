@@ -7,8 +7,12 @@ win32: LIBS += -L$$PWD/./ -lpdcurses -lws2_32
 
 SOURCES += main.cpp \
     chatserver.cpp \
-    chatconnection.cpp
+    chatconnection.cpp \
+    connectionmanager.cpp \
+    stringqueue.cpp
 
 HEADERS += \
     chatserver.h \
-    chatconnection.h
+    chatconnection.h \
+    connectionmanager.h \
+    stringqueue.h

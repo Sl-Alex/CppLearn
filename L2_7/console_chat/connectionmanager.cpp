@@ -41,5 +41,12 @@ void ConnectionManager::clear(void)
         delete *it;
         mConnections.erase(it);
     }
+}
 
+void ConnectionManager::sendTo(int num, std::string data)
+{
+    ChatConnection * pConnection;
+    cleanup();
+    pConnection = mConnections.at(num);
+    pConnection->sendMessage(std::move(data));
 }
