@@ -94,6 +94,18 @@ void ChatConnection::start(SOCKET newSocket)
                           std::ref(mReceiveQueue), std::ref(mSendQueue));
 }
 
+std::string ChatConnection::getAddress(void)
+{
+    SOCKADDR_IN addr;
+    int addrlen = sizeof(addr);
+
+    getpeername(mSocket, (SOCKADDR*)(&addr), &addrlen);
+
+    std::string res(inet_ntoa(addr.sin_addr));
+
+    return std::move(res);
+}
+
 void ChatConnection::stop(void)
 {
     mStop = true;

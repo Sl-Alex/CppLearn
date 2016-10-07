@@ -14,6 +14,8 @@ public:
     void clear(void);
     void sendTo(int num, std::string data);
     int getCount(void) {return mConnections.size(); }
+    std::string getAddress(int num);
+    void disconnect(int num);
 private:
     std::vector<ChatConnection*> mConnections;
     std::mutex mAccessMutex;

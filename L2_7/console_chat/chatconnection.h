@@ -6,6 +6,7 @@
 #include "windows.h"
 #include <thread>
 #include <atomic>
+#include <string>
 
 #include "stringqueue.h"
 
@@ -15,6 +16,7 @@ public:
     ChatConnection();
     ~ChatConnection();
     void start(SOCKET newSocket);
+    std::string getAddress(void);
     void stop(void);
     bool isRunning(void) {return mRunning;}
     void sendMessage(std::string data);

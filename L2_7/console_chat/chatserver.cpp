@@ -222,10 +222,31 @@ void ChatServer::connectTo(std::string address)
     manager.cleanup();
 }
 
+void ChatServer::disconnectFrom(int num)
+{
+    manager.disconnect(num);
+}
+
 void ChatServer::broadcast(std::string data)
 {
     for (int i = 0; i < manager.getCount(); i++)
     {
         manager.sendTo(i,data);
     }
+}
+
+void ChatServer::sendTo(int num, std::string data)
+{
+    manager.sendTo(num,data);
+}
+
+int ChatServer::getCount(void)
+{
+    manager.cleanup();
+    return manager.getCount();
+}
+
+std::string ChatServer::getAddr(int num)
+{
+    return manager.getAddress(num);
 }
